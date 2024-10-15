@@ -1,87 +1,67 @@
-import { Tabs } from 'expo-router';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
+import Index from './index';
+import Favorite from './favorite';
+import Settings from './settings';
+import Profile from './profile';
 import { IconHome, IconProfile, IconSaved, IconSettings } from '../../assets/icons/Icons';
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+
+const Tab = createBottomTabNavigator();
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
 
     return (
-        <Tabs
+        <Tab.Navigator
             screenOptions={{
                 tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
                 headerShown: false,
             }}>
-            <Tabs.Screen
-                name="index"
+            <Tab.Screen
+                name="Home"
+                component={Index}
                 options={{
-                    title: 'Home',
                     tabBarActiveTintColor: '#EB5757',
+                    title: 'Home',
                     tabBarIcon: ({ focused }) => (
-                        <>
-                            {focused ? (
-                                <IconHome color='#EB5757' />
-                            ) : (
-                                <IconHome color='#fff' />
-                            )
-                            }
-                        </>
+                        <IconHome color={focused ? '#EB5757' : '#fff'} />
                     ),
                 }}
             />
-            <Tabs.Screen
-                name="favorite"
+            <Tab.Screen
+                name="Favorite"
+                component={Favorite}
                 options={{
                     title: 'Favorite',
                     tabBarActiveTintColor: '#EB5757',
                     tabBarIcon: ({ focused }) => (
-                        <>
-                            {focused ? (
-                                <IconSaved color='#EB5757' />
-                            ) : (
-                                <IconSaved color='#fff' />
-                            )
-                            }
-                        </>
+                        <IconSaved color={focused ? '#EB5757' : '#fff'} />
                     ),
                 }}
             />
-            <Tabs.Screen
-                name="settings"
+            <Tab.Screen
+                name="Settings"
+                component={Settings}
                 options={{
                     title: 'Settings',
                     tabBarActiveTintColor: '#EB5757',
                     tabBarIcon: ({ focused }) => (
-                        <>
-                            {focused ? (
-                                <IconSettings color='#EB5757' />
-                            ) : (
-                                <IconSettings color='#fff' />
-                            )
-                            }
-                        </>
+                        <IconSettings color={focused ? '#EB5757' : '#fff'} />
                     ),
                 }}
             />
-            <Tabs.Screen
-                name="profile"
+            <Tab.Screen
+                name="Profile"
+                component={Profile}
                 options={{
                     title: 'Profile',
-                    tabBarActiveTintColor: '#EB5757',
                     tabBarIcon: ({ focused }) => (
-                        <>
-                            {focused ? (
-                                <IconProfile color='#EB5757' />
-                            ) : (
-                                <IconProfile color='#fff' />
-                            )
-                            }
-                        </>
+                        <IconProfile color={focused ? '#EB5757' : '#fff'} />
                     ),
                 }}
             />
-        </Tabs>
+        </Tab.Navigator>
     );
 }
