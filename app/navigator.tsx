@@ -2,12 +2,12 @@ import React, { useContext } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthContext } from '@/context/AuthContext';
-import Login from './Login';
 import TabLayout from './(tabs)/_layout';
+import Landing from './(auth)/_layout';
 
 const Stack = createNativeStackNavigator();
 
-export default function AppNavigator() {
+export default function Navigator() {
     const { user } = useContext(AuthContext);
 
     return (
@@ -21,8 +21,8 @@ export default function AppNavigator() {
                     />
                 ) : (
                     <Stack.Screen
-                        name="Login"
-                        component={Login}
+                        name="Landing"
+                        component={Landing}
                         options={{ headerShown: false }}
                     />
                 )}

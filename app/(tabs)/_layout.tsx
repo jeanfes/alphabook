@@ -4,7 +4,7 @@ import Index from './index';
 import Favorite from './favorite';
 import Settings from './settings';
 import Profile from './profile';
-import { IconHome, IconProfile, IconSaved, IconSettings } from '../../assets/icons/Icons';
+import { IconHome, IconProfile, IconSaved, IconSettings } from '../../assets/icons/IconsTabLayout';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -57,6 +57,7 @@ export default function TabLayout() {
                 component={Profile}
                 options={{
                     title: 'Profile',
+                    tabBarActiveTintColor: '#EB5757',
                     tabBarIcon: ({ focused }) => (
                         <IconProfile color={focused ? '#EB5757' : '#fff'} />
                     ),

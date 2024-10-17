@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "AlphaBook",
-    "slug": "AlphaBook",
+    "slug": "alphabook",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.starindustries.alphabook"
     },
     "web": {
       "bundler": "metro",
@@ -27,10 +28,17 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9714bad9-19a7-4aec-a339-165099c0097b"
+      }
+    },
+    "owner": "starindustries"
   }
 }
