@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View,  StyleSheet, StatusBar, Image, Text, Pressable } from 'react-native';
+import { View, StyleSheet, StatusBar, Image, Text, Pressable } from 'react-native';
 import { AuthContext } from '../../context/AuthContext';
 import { ViewContainer } from '@/components/ViewContainer/ViewContainer';
 import { InputDynamic } from '@/components/Inputs/InputDynamic';
@@ -32,7 +32,7 @@ export default function SignIn() {
                 <StatusBar barStyle="dark-content" backgroundColor="#fff" />
                 <Image source={require('../../assets/images/AlphaLogoDark.png')} style={styles.image} />
                 <View style={styles.inputsContainer}>
-                    <InputDynamic placeholder="Username or Email" value={userName} onChange={setUsername} />
+                    <InputDynamic placeholder="Username or Email" value={userName} onChange={setUsername} check={null} />
                     <InputDynamic placeholder="Password" value={password} onChange={setPassword} secureTextEntry />
                 </View>
                 <ButtonDynamic title="Access" onPress={handleLogin} design={3} />
