@@ -57,8 +57,6 @@ const styles = StyleSheet.create({
         gap: 20,
     },
     image: {
-        height: 200,
-        width: 220,
         objectFit: 'cover',
         marginBottom: 60,
         alignSelf: 'center',
