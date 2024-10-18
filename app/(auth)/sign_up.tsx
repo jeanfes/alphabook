@@ -33,13 +33,14 @@ export default function SignUp() {
         navigation.navigate('SignIn' as never);
     };
 
-    const { values, errors, touched, handleChange, handleBlur, handleSubmit, isValid, dirty } = useFormik({
+    const { resetForm, values, errors, touched, handleChange, handleBlur, handleSubmit, isValid, dirty } = useFormik({
         initialValues,
         validationSchema: validationSchema,
         onSubmit: async (values) => {
             alert("Register success");
             alert(JSON.stringify(values, null, 2));
             navigation.navigate('SignIn' as never);
+            resetForm();
         },
         validateOnChange: true,
     });
