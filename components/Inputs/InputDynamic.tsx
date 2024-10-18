@@ -10,7 +10,7 @@ interface InputDynamicProps {
     onChange: (text: string) => void;
     onBlur?: any;
     secureTextEntry?: boolean;
-    check?: boolean;
+    check?: boolean | null;
     id?: string;
 }
 
@@ -40,7 +40,7 @@ export const InputDynamic = ({ placeholder, value, onChange, onBlur, secureTextE
             />
             {!secureTextEntry && (
                 <Pressable style={styles.icon} onPress={toggleTextVisibility}>
-                    {check ? <IconCheck /> : <IconNoCheck />}
+                    {check === true ? <IconCheck /> : check === false ? < IconNoCheck /> : null}
                 </Pressable>
             )}
             {secureTextEntry && (
