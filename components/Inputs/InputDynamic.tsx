@@ -1,7 +1,7 @@
 import { Pressable, TextInput, View } from "react-native";
-import { IconEye } from "@/assets/icons/IconForms";
-import { IconCheck } from "@/assets/icons/IconForms";
-import { IconNoCheck } from "@/assets/icons/IconForms";
+import { IconEye } from "@/assets/icons/IconsForms";
+import { IconCheck } from "@/assets/icons/IconsForms";
+import { IconNoCheck } from "@/assets/icons/IconsForms";
 import { useEffect, useState } from "react";
 
 interface InputDynamicProps {
@@ -53,10 +53,11 @@ export const InputDynamic = ({ placeholder, value, onChange, onBlur, secureTextE
 };
 const styles = {
     inputContainer: {
+        flex: 1,
         flexDirection: 'row' as 'row',
         alignItems: 'center' as 'center',
         justifyContent: 'space-between' as 'space-between',
-        height: 65,
+        minHeight: 65,
         marginBottom: 10,
         borderColor: '#8E8E93',
         borderWidth: 1,

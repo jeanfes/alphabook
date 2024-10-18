@@ -1,7 +1,10 @@
+import { ViewContainer } from "@/components/ViewContainer/ViewContainer";
 import { Text } from "react-native";
 
 export default function Profile() {
     return (
-        <Text>Profile</Text>
+        <ViewContainer>
+            <Text>Profile</Text>
+        </ViewContainer>
     )
 }

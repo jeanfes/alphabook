@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, StyleSheet, StatusBar, Image, Text, Pressable } from 'react-native';
 import { AuthContext } from '../../context/AuthContext';
 import { ViewContainer } from '@/components/ViewContainer/ViewContainer';
@@ -25,6 +25,10 @@ export default function SignIn() {
     const handleGoSignUp = () => {
         navigation.navigate('SignUp' as never);
     }
+
+    useEffect(() => {
+        login({ name: "Jean", userName: "jeanfes", password: "123456" });
+    }, [userName, password]);
 
     return (
         <ViewContainer>
