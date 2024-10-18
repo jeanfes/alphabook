@@ -8,7 +8,7 @@ import Index from './index';
 const Stack = createNativeStackNavigator();
 
 const linking = {
-    prefixes: ['myapp://', 'https://myapp.com'],
+    prefixes: ['alphabook://', 'https://alphabook.com'],
     config: {
         screens: {
             Index: 'index',
