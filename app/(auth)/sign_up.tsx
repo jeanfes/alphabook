@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, StyleSheet, StatusBar, Image, Pressable, Text } from 'react-native';
 import { ButtonDynamic } from '@/components/Buttons/ButtonDynamic';
 import { InputDynamic } from '@/components/Inputs/InputDynamic';
 import { useNavigation } from 'expo-router';
-import { ViewContainer } from '@/components/ViewContainer/ViewContainer';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { ViewContainer } from '@/components/ViewContainer/ViewContainer';
 
 
 export default function SignUp() {

@@ -11,9 +11,23 @@ const linking = {
     prefixes: ['alphabook://', 'https://alphabook.com'],
     config: {
         screens: {
-            Index: 'index',
-            SignIn: 'sign-in',
-            SignUp: 'sign-up',
+            Landing: {
+                path: 'landing',
+                screens: {
+                    Index: 'index',
+                    SignIn: 'sign-in',
+                    SignUp: 'sign-up',
+                },
+            },
+            Main: {
+                path: 'main',
+                screens: {
+                    Index: 'index',
+                    Profile: 'profile',
+                    Search: 'search',
+                    Book: 'book',
+                },
+            },
         },
     },
 };

@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, StyleSheet, StatusBar, Image, Text, Pressable } from 'react-native';
 import { AuthContext } from '../../context/AuthContext';
-import { ViewContainer } from '@/components/ViewContainer/ViewContainer';
+import {  ViewContainer } from '@/components/ViewContainer/ViewContainer';
 import { InputDynamic } from '@/components/Inputs/InputDynamic';
 import { ButtonDynamic } from '@/components/Buttons/ButtonDynamic';
 import { useNavigation } from 'expo-router';

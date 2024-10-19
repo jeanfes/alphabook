@@ -62,6 +62,7 @@ const styles = {
         borderColor: '#8E8E93',
         borderWidth: 1,
         paddingLeft: 28,
+        borderRadius: 8,
         paddingRight: 14,
     },
     input: {

@@ -24,6 +24,7 @@ export default function TabLayout() {
     if (!loaded) {
         return null;
     }
+    
     return (
         <Tab.Navigator
             screenOptions={{

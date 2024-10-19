@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         padding: 18,
         paddingRight: 12,
-        borderRadius: 14,
+        borderRadius: 8,
         gap: 18,
     },
     input: {

@@ -1,12 +1,12 @@
 import { IconMenu, IconNotification } from "@/assets/icons/IconsHeader";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 
 export const Header = () => {
     return (
         <View style={styles.header}>
-            <View style={styles.titleContainer}>
+            <Pressable style={styles.titleContainer}>
                 <IconMenu />
-            </View>
+            </Pressable>
             <View style={styles.containerImage}>
                 <IconNotification />
                 <Image
