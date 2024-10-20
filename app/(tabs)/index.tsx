@@ -3,7 +3,7 @@ import { Header } from '@/components/Header/Header';
 import { SearchBar } from '@/components/SearchBar/SearchBar';
 import { AuthContext } from '@/context/AuthContext';
 import { shortText } from '@/utilities/formatters';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { books } from '@/utilities/data';
@@ -44,7 +44,7 @@ const CategoryItem = ({ category, selected, onPress }: CategoryItemProps) => {
 
 const BookItem = ({ book }: any) => {
     return (
-        <View>
+        <View style={stylesBookItem.bookItem}>
             <Image
                 source={{
                     uri: book?.image,
@@ -77,8 +77,9 @@ const BookItem = ({ book }: any) => {
 
 export default function Index() {
     const { user } = useContext(AuthContext);
+    const scrollViewRef = useRef<ScrollView>(null);
     const [searchBook, setSearchBook] = useState<string>('');
-    const [selectedCategory, setSelectedCategory] = useState<number>(books[0].category.id);
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(books[0].category.id);
     const [selectedBooks, setSelectedBooks] = useState(books[0].items);
 
     const categories = books.map((b) => b.category);
@@ -88,15 +89,23 @@ export default function Index() {
         setSelectedBooks(books.find((b) => b.category.id === category?.id)?.items || []);
     };
 
-    useEffect(() => {
+    const handleSearchBook = useMemo(() => {
         if (searchBook) {
             const filteredBooks = books
                 .map((b) => b.items)
                 .flat()
                 .filter((b) => b.title.toLowerCase().includes(searchBook.toLowerCase()));
             setSelectedBooks(filteredBooks);
+            setSelectedCategory(books[0].category.id);
         } else {
             setSelectedBooks(books.find((b) => b.category.id === selectedCategory)?.items || []);
+        }
+    }, [searchBook]);
+
+    useEffect(() => {
+        handleSearchBook;
+        if (scrollViewRef.current) {
+            scrollViewRef.current.scrollTo({ y: 0, animated: true });
         }
     }, [searchBook]);
 
@@ -108,7 +117,7 @@ export default function Index() {
             }}
         >
             <Header />
-            <ScrollView>
+            <ScrollView ref={scrollViewRef}>
                 <View style={stylesIndex.container}>
                     <View style={stylesIndex.greetingsContainer}>
                         <Text style={stylesIndex.greetingsText}>Hello, {user?.name || 'User'}</Text>
@@ -122,6 +131,10 @@ export default function Index() {
                         renderItem={({ item }) => <CategoryItem onPress={() => handleSelectCategory(item)} category={item} selected={selectedCategory === item.id} />}
                     />
                     <Carrousel data={selectedBooks} renderItem={({ item }) => <BookItem book={item} />} />
+                    <View style={stylesIndex.recommended}>
+                        <Text style={stylesIndex.textRecommended}>Recommended for you</Text>
+                        <Carrousel data={books[2].items} renderItem={({ item }) => <BookItem book={item} />} />
+                    </View>
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -130,6 +143,7 @@ export default function Index() {
 
 const stylesIndex = StyleSheet.create({
     container: {
+        flex: 1,
         gap: 25,
         paddingTop: 4,
         paddingLeft: 18,
@@ -152,6 +166,16 @@ const stylesIndex = StyleSheet.create({
     homeContainer: {
         paddingRight: 18,
     },
+    recommended: {
+        flexDirection: 'column',
+        gap: 25,
+        paddingBottom: 15,
+    },
+    textRecommended: {
+        fontSize: 18,
+        fontFamily: 'OpenSansBold',
+        color: '#000000',
+    },
 });
 
 const stylesBookItem = StyleSheet.create({
@@ -164,10 +188,10 @@ const stylesBookItem = StyleSheet.create({
         height: 270,
         borderRadius: 20,
     },
-    separator: {
-        width: 12,
-    },
-    lastSeparator: {
-        width: 18,
+    bookItem: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        gap: 6,
     },
 });

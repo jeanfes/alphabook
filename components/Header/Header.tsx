@@ -8,7 +8,15 @@ export const Header = () => {
 
     return (
         <View style={styles.header}>
-            <Pressable onPress={() => setMenuVisible(true)} style={styles.menuContainer}>
+            <Pressable
+                onPress={() => setMenuVisible(!menuVisible)}
+                style={({ pressed }) => [
+                    styles.menuContainer,
+                    {
+                        backgroundColor: pressed ? '#D3D3D3' : 'transparent',
+                    },
+                ]}
+            >
                 <IconMenu />
             </Pressable>
             <View style={styles.containerImage}>
@@ -27,8 +35,9 @@ export const Header = () => {
 
 const styles = StyleSheet.create({
     header: {
-        backgroundColor: '#fff',
+        backgroundColor: '#FFFFFF',
         padding: 18,
+        paddingLeft: 8,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -46,8 +55,12 @@ const styles = StyleSheet.create({
         borderRadius: 50,
     },
     menuContainer: {
+        width: 45,
+        height: 45,
+        justifyContent: 'center',
+        alignItems: 'center',
         flexDirection: 'column',
-        padding: 10,
-        paddingLeft: 0,
+        borderRadius: 50,
+        padding: 0,
     },
 });
