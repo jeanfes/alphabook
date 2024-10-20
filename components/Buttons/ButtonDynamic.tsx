@@ -1,5 +1,5 @@
-import { useFonts } from "expo-font";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { useFonts } from 'expo-font';
+import { Pressable, StyleSheet, Text } from 'react-native';
 
 interface ButtonDynamicProps {
     title: string;
@@ -30,13 +30,7 @@ export const ButtonDynamic = ({ title, onPress, design = 1, disabled }: ButtonDy
     };
 
     return (
-        <Pressable onPress={onPress}
-            style={({ pressed }) => [
-                getButtonStyle(pressed),
-                disabled && { opacity: 0.8 },
-            ]}
-            disabled={disabled}
-        >
+        <Pressable onPress={onPress} style={({ pressed }) => [getButtonStyle(pressed), disabled && { opacity: 0.8 }]} disabled={disabled}>
             <Text style={design === 1 ? styles1.text : design === 2 ? styles2.text : styles3.text}>{title}</Text>
         </Pressable>
     );
@@ -65,7 +59,7 @@ const styles1 = StyleSheet.create({
         color: '#EB5757',
         fontFamily: 'OpenSansRegular',
         fontSize: 18,
-    }
+    },
 });
 
 const styles2 = StyleSheet.create({
@@ -91,7 +85,7 @@ const styles2 = StyleSheet.create({
         color: '#FFFFFF',
         fontFamily: 'OpenSansRegular',
         fontSize: 18,
-    }
+    },
 });
 
 const styles3 = StyleSheet.create({
@@ -117,5 +111,5 @@ const styles3 = StyleSheet.create({
         color: '#FFFFFF',
         fontFamily: 'OpenSansRegular',
         fontSize: 18,
-    }
+    },
 });

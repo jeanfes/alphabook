@@ -1,12 +1,10 @@
 import { ViewContainer } from '@/components/ViewContainer/ViewContainer';
 import { StyleSheet, Text } from 'react-native';
 
-export default function Favorite() {
+export default function Favorites() {
     return (
         <ViewContainer>
-            <Text>
-                Favorite
-            </Text>
+            <Text>Favorite</Text>
         </ViewContainer>
     );
 }

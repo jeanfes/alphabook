@@ -1,8 +1,8 @@
-import { Pressable, TextInput, View } from "react-native";
-import { IconEye } from "@/assets/icons/IconsForms";
-import { IconCheck } from "@/assets/icons/IconsForms";
-import { IconNoCheck } from "@/assets/icons/IconsForms";
-import { useEffect, useState } from "react";
+import { Pressable, TextInput, View } from 'react-native';
+import { IconEye } from '@/assets/icons/IconsForms';
+import { IconCheck } from '@/assets/icons/IconsForms';
+import { IconNoCheck } from '@/assets/icons/IconsForms';
+import { useEffect, useState } from 'react';
 
 interface InputDynamicProps {
     placeholder: string;
@@ -17,7 +17,7 @@ interface InputDynamicProps {
 export const InputDynamic = ({ placeholder, value, onChange, onBlur, secureTextEntry = false, check = false, id }: InputDynamicProps) => {
     const [isTextVisible, setIsTextVisible] = useState(!secureTextEntry);
     const toggleTextVisibility = () => {
-        setIsTextVisible(prevState => !prevState);
+        setIsTextVisible((prevState) => !prevState);
     };
 
     useEffect(() => {
@@ -25,10 +25,12 @@ export const InputDynamic = ({ placeholder, value, onChange, onBlur, secureTextE
     }, [secureTextEntry]);
 
     return (
-        <View style={{
-            ...styles.inputContainer,
-            borderColor: check ? '#27AE60' : '#8E8E93',
-        }}>
+        <View
+            style={{
+                ...styles.inputContainer,
+                borderColor: check ? '#27AE60' : '#8E8E93',
+            }}
+        >
             <TextInput
                 style={styles.input}
                 placeholder={placeholder}
@@ -40,7 +42,7 @@ export const InputDynamic = ({ placeholder, value, onChange, onBlur, secureTextE
             />
             {!secureTextEntry && (
                 <Pressable style={styles.icon} onPress={toggleTextVisibility}>
-                    {check === true ? <IconCheck /> : check === false ? < IconNoCheck /> : null}
+                    {check === true ? <IconCheck /> : check === false ? <IconNoCheck /> : null}
                 </Pressable>
             )}
             {secureTextEntry && (

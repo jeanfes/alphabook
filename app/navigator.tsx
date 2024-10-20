@@ -14,17 +14,9 @@ export default function Navigator() {
         <NavigationContainer independent>
             <Stack.Navigator>
                 {user ? (
-                    <Stack.Screen
-                        name="Main"
-                        component={TabLayout}
-                        options={{ headerShown: false }}
-                    />
+                    <Stack.Screen name="Main" component={TabLayout} options={{ headerShown: false }} />
                 ) : (
-                    <Stack.Screen
-                        name="Landing"
-                        component={Landing}
-                        options={{ headerShown: false }}
-                    />
+                    <Stack.Screen name="Landing" component={Landing} options={{ headerShown: false }} />
                 )}
             </Stack.Navigator>
         </NavigationContainer>

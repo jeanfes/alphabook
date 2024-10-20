@@ -1,7 +1,8 @@
+import React, { useEffect, useRef } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import React from 'react';
+import { View, Text, Animated, StyleSheet } from 'react-native';
 import Index from './index';
-import Favorite from './favorite';
+import Favorites from './favorites';
 import Settings from './settings';
 import Profile from './profile';
 import { IconHome, IconProfile, IconSaved, IconSettings } from '../../assets/icons/IconsTabLayout';
@@ -10,6 +11,32 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { useFonts } from 'expo-font';
 
 const Tab = createBottomTabNavigator();
+
+const AnimatedLabel = ({ focused, title }: { focused: boolean; title: string }) => {
+    const maxHeight = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        Animated.timing(maxHeight, {
+            toValue: focused ? 20 : 0,
+            duration: 300,
+            useNativeDriver: false,
+        }).start();
+    }, [focused]);
+
+    return <Animated.View style={[styles.labelContainer, { maxHeight }]}>{focused && <Text style={styles.label}>{title}</Text>}</Animated.View>;
+};
+
+const styles = StyleSheet.create({
+    labelContainer: {
+        overflow: 'hidden',
+    },
+    label: {
+        fontSize: 10,
+        fontFamily: 'OpenSansRegular',
+        fontWeight: '500',
+        color: '#EB5757',
+    },
+});
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
@@ -24,7 +51,7 @@ export default function TabLayout() {
     if (!loaded) {
         return null;
     }
-    
+
     return (
         <Tab.Navigator
             screenOptions={{
@@ -35,65 +62,38 @@ export default function TabLayout() {
                     paddingTop: 4,
                     paddingBottom: 4,
                 },
-            }}>
+            }}
+        >
             <Tab.Screen
                 name="Home"
                 component={Index}
                 options={{
-                    tabBarActiveTintColor: '#EB5757',
-                    title: 'Home',
-                    tabBarLabelStyle: {
-                        fontFamily: 'OpenSansRegular',
-                        fontWeight: 500,
-                    },
-                    tabBarIcon: ({ focused }) => (
-                        <IconHome color={focused ? '#EB5757' : '#fff'} />
-                    ),
+                    tabBarLabel: ({ focused }) => <AnimatedLabel focused={focused} title="Home" />,
+                    tabBarIcon: ({ focused }) => <IconHome color={focused ? '#EB5757' : '#fff'} />,
                 }}
             />
             <Tab.Screen
-                name="Favorite"
-                component={Favorite}
+                name="Favorites"
+                component={Favorites}
                 options={{
-                    title: 'Favorite',
-                    tabBarActiveTintColor: '#EB5757',
-                    tabBarLabelStyle: {
-                        fontFamily: 'OpenSansRegular',
-                        fontWeight: 500,
-                    },
-                    tabBarIcon: ({ focused }) => (
-                        <IconSaved color={focused ? '#EB5757' : '#fff'} />
-                    ),
+                    tabBarLabel: ({ focused }) => <AnimatedLabel focused={focused} title="Favorites" />,
+                    tabBarIcon: ({ focused }) => <IconSaved color={focused ? '#EB5757' : '#fff'} />,
                 }}
             />
             <Tab.Screen
                 name="Settings"
                 component={Settings}
                 options={{
-                    title: 'Settings',
-                    tabBarActiveTintColor: '#EB5757',
-                    tabBarLabelStyle: {
-                        fontFamily: 'OpenSansRegular',
-                        fontWeight: 500,
-                    },
-                    tabBarIcon: ({ focused }) => (
-                        <IconSettings color={focused ? '#EB5757' : '#fff'} />
-                    ),
+                    tabBarLabel: ({ focused }) => <AnimatedLabel focused={focused} title="Settings" />,
+                    tabBarIcon: ({ focused }) => <IconSettings color={focused ? '#EB5757' : '#fff'} />,
                 }}
             />
             <Tab.Screen
                 name="Profile"
                 component={Profile}
                 options={{
-                    title: 'Profile',
-                    tabBarActiveTintColor: '#EB5757',
-                    tabBarLabelStyle: {
-                        fontFamily: 'OpenSansRegular',
-                        fontWeight: 500,
-                    },
-                    tabBarIcon: ({ focused }) => (
-                        <IconProfile color={focused ? '#EB5757' : '#fff'} />
-                    ),
+                    tabBarLabel: ({ focused }) => <AnimatedLabel focused={focused} title="Profile" />,
+                    tabBarIcon: ({ focused }) => <IconProfile color={focused ? '#EB5757' : '#fff'} />,
                 }}
             />
         </Tab.Navigator>

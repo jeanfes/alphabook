@@ -1,22 +1,29 @@
-import { IconMenu, IconNotification } from "@/assets/icons/IconsHeader";
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import { IconMenu, IconNotification } from '@/assets/icons/IconsHeader';
+import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { MenuBar } from '../MenuBar/MenuBar';
+import { useState } from 'react';
 
 export const Header = () => {
+    const [menuVisible, setMenuVisible] = useState(false);
+
     return (
         <View style={styles.header}>
-            <Pressable style={styles.titleContainer}>
+            <Pressable onPress={() => setMenuVisible(true)} style={styles.menuContainer}>
                 <IconMenu />
             </Pressable>
             <View style={styles.containerImage}>
                 <IconNotification />
                 <Image
-                    source={{ uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN6h7AAVpPXDIgzVngWkxS9mcE0tOesmIStA&s" }}
+                    source={{
+                        uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN6h7AAVpPXDIgzVngWkxS9mcE0tOesmIStA&s',
+                    }}
                     style={styles.headerImage}
                 />
             </View>
+            <MenuBar menuVisible={menuVisible} setMenuVisible={setMenuVisible} />
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     header: {
@@ -38,7 +45,9 @@ const styles = StyleSheet.create({
         height: 45,
         borderRadius: 50,
     },
-    titleContainer: {
+    menuContainer: {
         flexDirection: 'column',
+        padding: 10,
+        paddingLeft: 0,
     },
 });

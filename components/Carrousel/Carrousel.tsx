@@ -1,4 +1,5 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { useEffect, useId } from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
 
 interface CarrouselProps {
     data: any;
@@ -6,10 +7,12 @@ interface CarrouselProps {
 }
 
 export const Carrousel = ({ data, renderItem }: CarrouselProps) => {
+    const key = useId();
+
     return (
         <FlatList
             data={data}
-            keyExtractor={(item) => item.id}
+            key={key}
             renderItem={renderItem}
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -17,7 +20,7 @@ export const Carrousel = ({ data, renderItem }: CarrouselProps) => {
             ListFooterComponent={() => <View style={styles.lastSeparator} />}
         />
     );
-}
+};
 
 const styles = StyleSheet.create({
     textContainer: {
@@ -34,5 +37,5 @@ const styles = StyleSheet.create({
     },
     lastSeparator: {
         width: 18,
-    }
+    },
 });

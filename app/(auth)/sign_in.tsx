@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, StyleSheet, StatusBar, Image, Text, Pressable } from 'react-native';
 import { AuthContext } from '../../context/AuthContext';
-import {  ViewContainer } from '@/components/ViewContainer/ViewContainer';
+import { ViewContainer } from '@/components/ViewContainer/ViewContainer';
 import { InputDynamic } from '@/components/Inputs/InputDynamic';
 import { ButtonDynamic } from '@/components/Buttons/ButtonDynamic';
 import { useNavigation } from 'expo-router';
@@ -13,21 +13,21 @@ export default function SignIn() {
     const navigation = useNavigation();
 
     const handleLogin = () => {
-        if (userName === "jeanfes" && password === "123456") {
-            alert("Login success");
+        if (userName === 'jeanfes' && password === '123456') {
+            alert('Login success');
             const userData = { userName: userName, password: password };
             login(userData);
         } else {
-            alert("Login failed");
+            alert('Login failed');
         }
     };
 
     const handleGoSignUp = () => {
         navigation.navigate('SignUp' as never);
-    }
+    };
 
     useEffect(() => {
-        login({ name: "Jean", userName: "jeanfes", password: "123456" });
+        login({ name: 'Jean', userName: 'jeanfes', password: '123456' });
     }, [userName, password]);
 
     return (
@@ -41,19 +41,15 @@ export default function SignIn() {
                 </View>
                 <ButtonDynamic title="Access" onPress={handleLogin} design={3} />
                 <View style={styles.haveAccount}>
-                    <Text style={{ color: "#828282", marginLeft: 4, fontFamily: "OpenSansRegular", fontWeight: 500 }}>
-                        Don't have an account yet?
-                    </Text>
+                    <Text style={{ color: '#828282', marginLeft: 4, fontFamily: 'OpenSansRegular', fontWeight: 500 }}>Don't have an account yet?</Text>
                     <Pressable onPress={handleGoSignUp}>
-                        <Text style={{ color: "#828282", marginLeft: 4, fontFamily: "OpenSansSemiBold", fontWeight: 700 }}>
-                            Sign up here
-                        </Text>
+                        <Text style={{ color: '#828282', marginLeft: 4, fontFamily: 'OpenSansSemiBold', fontWeight: 700 }}>Sign up here</Text>
                     </Pressable>
                 </View>
             </View>
         </ViewContainer>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -82,4 +78,3 @@ const styles = StyleSheet.create({
         marginBottom: 40,
     },
 });
-

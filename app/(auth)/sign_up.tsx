@@ -7,7 +7,6 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { ViewContainer } from '@/components/ViewContainer/ViewContainer';
 
-
 export default function SignUp() {
     const navigation = useNavigation();
 
@@ -37,7 +36,7 @@ export default function SignUp() {
         initialValues,
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            alert("Register success");
+            alert('Register success');
             alert(JSON.stringify(values, null, 2));
             navigation.navigate('SignIn' as never);
             resetForm();
@@ -51,13 +50,7 @@ export default function SignUp() {
                 <StatusBar barStyle="dark-content" backgroundColor="#fff" />
                 <Image source={require('../../assets/images/AlphaLogoDark.png')} style={styles.image} />
                 <View style={styles.inputsContainer}>
-                    <InputDynamic
-                        placeholder="Name"
-                        value={values.name}
-                        onChange={handleChange('name')}
-                        onBlur={handleBlur('name')}
-                        check={touched.name && !errors.name}
-                    />
+                    <InputDynamic placeholder="Name" value={values.name} onChange={handleChange('name')} onBlur={handleBlur('name')} check={touched.name && !errors.name} />
                     <InputDynamic
                         placeholder="Username"
                         value={values.username}
@@ -65,13 +58,7 @@ export default function SignUp() {
                         onBlur={handleBlur('username')}
                         check={touched.username && !errors.username}
                     />
-                    <InputDynamic
-                        placeholder="Email"
-                        value={values.email}
-                        onChange={handleChange('email')}
-                        onBlur={handleBlur('email')}
-                        check={touched.email && !errors.email}
-                    />
+                    <InputDynamic placeholder="Email" value={values.email} onChange={handleChange('email')} onBlur={handleBlur('email')} check={touched.email && !errors.email} />
                     <InputDynamic
                         placeholder="Password"
                         value={values.password}
@@ -91,19 +78,15 @@ export default function SignUp() {
                 </View>
                 <ButtonDynamic title="Create Account" onPress={handleSubmit} design={3} disabled={!(isValid && dirty)} />
                 <View style={styles.haveAccount}>
-                    <Text style={{ color: "#828282", marginLeft: 4, fontFamily: "OpenSansRegular", fontWeight: "500" }}>
-                        Already have an account?
-                    </Text>
-                    <Pressable onPress={handleGoSignIn} >
-                        <Text style={{ color: "#828282", marginLeft: 4, fontFamily: "OpenSansSemiBold", fontWeight: "700" }}>
-                            Sign in here
-                        </Text>
+                    <Text style={{ color: '#828282', marginLeft: 4, fontFamily: 'OpenSansRegular', fontWeight: '500' }}>Already have an account?</Text>
+                    <Pressable onPress={handleGoSignIn}>
+                        <Text style={{ color: '#828282', marginLeft: 4, fontFamily: 'OpenSansSemiBold', fontWeight: '700' }}>Sign in here</Text>
                     </Pressable>
                 </View>
             </View>
         </ViewContainer>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -131,5 +114,3 @@ const styles = StyleSheet.create({
         marginBottom: 40,
     },
 });
-
-

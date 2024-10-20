@@ -17,18 +17,14 @@ module.exports = {
         ecmaVersion: 12,
         sourceType: 'module',
     },
-    plugins: [
-        'react',
-        '@typescript-eslint',
-        'prettier',
-    ],
+    plugins: ['react', '@typescript-eslint', 'prettier'],
     rules: {
         'prettier/prettier': 'error',
         'react/react-in-jsx-scope': 'off',
         'react/prop-types': 'off',
         'no-unused-vars': ['error', { vars: 'all', args: 'none', ignoreRestSiblings: false }],
         '@typescript-eslint/no-unused-vars': ['error', { vars: 'all', args: 'none', ignoreRestSiblings: false }],
-        'quotes': ['error', 'single'],
+        quotes: ['error', 'single'],
     },
     settings: {
         react: {

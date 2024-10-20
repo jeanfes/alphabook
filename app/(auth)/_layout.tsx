@@ -33,7 +33,6 @@ const linking = {
 };
 
 export default function Landing() {
-
     return (
         <NavigationContainer independent linking={linking}>
             <Stack.Navigator initialRouteName="Index">
@@ -43,4 +42,4 @@ export default function Landing() {
             </Stack.Navigator>
         </NavigationContainer>
     );
-};
+}

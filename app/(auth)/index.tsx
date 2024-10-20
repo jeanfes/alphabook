@@ -28,19 +28,19 @@ export default function Index() {
 
     return (
         <View style={styles.mainContainer}>
-            <StatusBar barStyle='light-content' backgroundColor='#EB5757' />
+            <StatusBar barStyle="light-content" backgroundColor="#EB5757" />
             <Image source={require('../../assets/images/AlphaLogoLight.png')} style={styles.image} />
             <View style={styles.textContainer}>
                 <Text style={{ color: 'white', fontFamily: 'OpenSansExtraBold', fontSize: 48 }}>Welcome</Text>
                 <Text style={{ color: 'white', fontFamily: 'OpenSansRegular', fontSize: 20 }}>Read without limits</Text>
             </View>
             <View style={styles.buttonsContainer}>
-                <ButtonDynamic title='Create Account' onPress={handleGoSignUp} />
-                <ButtonDynamic title='Access' onPress={handleGoSignIn} design={2} />
+                <ButtonDynamic title="Create Account" onPress={handleGoSignUp} />
+                <ButtonDynamic title="Access" onPress={handleGoSignIn} design={2} />
             </View>
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     mainContainer: {
@@ -62,5 +62,3 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
 });
-
-

@@ -1,23 +1,18 @@
-import { StyleSheet, TextInput, View } from "react-native";
-import { IconMicro, IconSearch } from "@/assets/icons/IconsSearchBar";
-import { useState } from "react";
+import { StyleSheet, TextInput, View } from 'react-native';
+import { IconMicro, IconSearch } from '@/assets/icons/IconsSearchBar';
+import { useState } from 'react';
 
 interface SearchBarProps {
+    search: string;
+    setSearch: (text: string) => void;
     showMicro: boolean;
 }
 
-export const SearchBar = ({ showMicro }: SearchBarProps) => {
-    const [search, setSearch] = useState("");
-
+export const SearchBar = ({ search, setSearch, showMicro }: SearchBarProps) => {
     return (
         <View style={styles.container}>
             <IconSearch />
-            <TextInput
-                style={styles.input}
-                placeholder="Search here"
-                value={search}
-                onChangeText={setSearch}
-            />
+            <TextInput style={styles.input} placeholder="Search here" value={search} onChangeText={setSearch} />
             {showMicro && (
                 <View style={styles.microphoneContainer}>
                     <IconMicro />
@@ -25,7 +20,7 @@ export const SearchBar = ({ showMicro }: SearchBarProps) => {
             )}
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
