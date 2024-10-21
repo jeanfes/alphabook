@@ -2,85 +2,27 @@ import { Carrousel } from '@/components/Carrousel/Carrousel';
 import { Header } from '@/components/Header/Header';
 import { SearchBar } from '@/components/SearchBar/SearchBar';
 import { AuthContext } from '@/context/AuthContext';
-import { shortText } from '@/utilities/formatters';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { Image, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useContext, useEffect, useMemo, useState } from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { books } from '@/utilities/data';
+import { useNavigation } from 'expo-router';
+import { Link, NavigationContainer } from '@react-navigation/native';
+import { CategoryItem } from '@/components/Library/CategoryItem';
+import { BookItem } from '@/components/Library/BookItem';
+import { ReadBook } from '@/pages/ReadBook';
+import { Notifications } from '@/pages/Notifications';
+import { IconArrowLeft } from '@/assets/icons/IconsHeader';
 
-interface CategoryItemProps {
-    onPress: (category: any) => void;
-    category: {
-        id: number;
-        text: string;
-    };
-    selected: boolean;
-}
+const Stack = createNativeStackNavigator();
 
-const CategoryItem = ({ category, selected, onPress }: CategoryItemProps) => {
-    return (
-        <Pressable
-            onPress={onPress}
-            style={{
-                height: 40,
-                justifyContent: 'center',
-                backgroundColor: 'transparent',
-                paddingRight: 8,
-                borderRadius: 8,
-            }}
-        >
-            <Text
-                style={{
-                    fontSize: 18,
-                    fontFamily: 'OpenSansRegular',
-                    color: selected ? '#000000' : '#9D9D9D',
-                }}
-            >
-                {category?.text}
-            </Text>
-        </Pressable>
-    );
-};
-
-const BookItem = ({ book }: any) => {
-    return (
-        <View style={stylesBookItem.bookItem}>
-            <Image
-                source={{
-                    uri: book?.image,
-                }}
-                style={stylesBookItem.image}
-            />
-            <View style={stylesBookItem.textContainer}>
-                <Text
-                    style={{
-                        fontSize: 16,
-                        fontFamily: 'OpenSansBold',
-                        color: '#000000',
-                    }}
-                >
-                    {shortText(book?.title, 16)}
-                </Text>
-                <Text
-                    style={{
-                        fontSize: 12,
-                        fontFamily: 'OpenSansRegular',
-                        color: '#9D9D9D',
-                    }}
-                >
-                    {shortText(book?.text, 20)}
-                </Text>
-            </View>
-        </View>
-    );
-};
-
-export default function Index() {
+const Index = () => {
     const { user } = useContext(AuthContext);
-    const scrollViewRef = useRef<ScrollView>(null);
     const [searchBook, setSearchBook] = useState<string>('');
     const [selectedCategory, setSelectedCategory] = useState<number | null>(books[0].category.id);
     const [selectedBooks, setSelectedBooks] = useState(books[0].items);
+    const navigation = useNavigation<any>();
 
     const categories = books.map((b) => b.category);
 
@@ -104,9 +46,6 @@ export default function Index() {
 
     useEffect(() => {
         handleSearchBook;
-        if (scrollViewRef.current) {
-            scrollViewRef.current.scrollTo({ y: 0, animated: true });
-        }
     }, [searchBook]);
 
     return (
@@ -117,7 +56,7 @@ export default function Index() {
             }}
         >
             <Header />
-            <ScrollView ref={scrollViewRef}>
+            <ScrollView>
                 <View style={stylesIndex.container}>
                     <View style={stylesIndex.greetingsContainer}>
                         <Text style={stylesIndex.greetingsText}>Hello, {user?.name || 'User'}</Text>
@@ -130,7 +69,7 @@ export default function Index() {
                         data={categories}
                         renderItem={({ item }) => <CategoryItem onPress={() => handleSelectCategory(item)} category={item} selected={selectedCategory === item.id} />}
                     />
-                    <Carrousel data={selectedBooks} renderItem={({ item }) => <BookItem book={item} />} />
+                    <Carrousel data={selectedBooks} renderItem={({ item }) => <BookItem book={item} onPress={() => navigation.navigate('readbook', { book: item })} />} />
                     <View style={stylesIndex.recommended}>
                         <Text style={stylesIndex.textRecommended}>Recommended for you</Text>
                         <Carrousel data={books[2].items} renderItem={({ item }) => <BookItem book={item} />} />
@@ -138,6 +77,56 @@ export default function Index() {
                 </View>
             </ScrollView>
         </SafeAreaView>
+    );
+}
+
+const linking = {
+    prefixes: ['https://alphabook.com', 'alphabook://'],
+    config: {
+        screens: {
+            index: 'index',
+            readbook: 'readbook/:id',
+        },
+    },
+};
+
+export default function StackIndex() {
+    return (
+        <NavigationContainer independent linking={linking}>
+            <Stack.Navigator initialRouteName='Index'>
+                <Stack.Screen
+                    options={{
+                        headerShown: false,
+                    }} name="index" component={Index} />
+                <Stack.Screen
+                    name="readbook"
+                    component={ReadBook}
+                    options={{
+                        headerTitle: "",
+                        headerLeft: () => (
+                            <Link to={"/index"}>
+                                <IconArrowLeft />
+                            </Link>
+                        ),
+                        headerRight: () => (
+                            <Link to={"/index"}>
+                                <IconArrowLeft />
+                            </Link>
+                        ),
+                    }}
+                />
+                <Stack.Screen
+                    name="notifications"
+                    component={Notifications}
+                    options={{
+                        headerTitle: "",
+                        headerLeft: () => (
+                            <></>
+                        ),
+                    }}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
     );
 }
 
@@ -175,23 +164,5 @@ const stylesIndex = StyleSheet.create({
         fontSize: 18,
         fontFamily: 'OpenSansBold',
         color: '#000000',
-    },
-});
-
-const stylesBookItem = StyleSheet.create({
-    textContainer: {
-        padding: 4,
-        marginTop: 6,
-    },
-    image: {
-        width: 170,
-        height: 270,
-        borderRadius: 20,
-    },
-    bookItem: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        gap: 6,
     },
 });

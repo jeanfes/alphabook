@@ -1,4 +1,5 @@
 import { ViewContainer } from '@/components/ViewContainer/ViewContainer';
+import { Link } from 'expo-router';
 import { StyleSheet, Text } from 'react-native';
 
 export default function Favorites() {

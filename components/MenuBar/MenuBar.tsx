@@ -7,7 +7,7 @@ interface MenuBarProps {
     setMenuVisible: (visible: boolean) => void;
 }
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 export const MenuBar = ({ menuVisible = false, setMenuVisible }: MenuBarProps) => {
     const [visible, setVisible] = useState(menuVisible);
@@ -69,10 +69,7 @@ export const MenuBar = ({ menuVisible = false, setMenuVisible }: MenuBarProps) =
 
 const styles = StyleSheet.create({
     container: {
-        width: '100%',
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        margin: 16,
     },
     overlay: {
         flex: 1,
@@ -88,8 +85,8 @@ const styles = StyleSheet.create({
         bottom: 0,
     },
     menu: {
-        width: width * 0.7,
-        height: height,
+        width: "70%",
+        height: "100%",
         backgroundColor: 'white',
         padding: 16,
         position: 'absolute',
@@ -97,6 +94,5 @@ const styles = StyleSheet.create({
     },
     menuItem: {
         padding: 8,
-        fontSize: 16,
     },
 });

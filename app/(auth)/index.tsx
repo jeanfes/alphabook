@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Text, Pressable, StatusBar } from 'react-native';
+import { View, StyleSheet, Image, Text, StatusBar } from 'react-native';
 import { useFonts } from 'expo-font';
 import { useNavigation } from 'expo-router';
 import { ButtonDynamic } from '@/components/Buttons/ButtonDynamic';
@@ -23,6 +23,7 @@ export default function Index() {
     };
 
     const handleGoSignUp = () => {
+        alert('Go to sign up');
         navigation.navigate('SignUp' as never);
     };
 

@@ -7,39 +7,12 @@ import Index from './index';
 
 const Stack = createNativeStackNavigator();
 
-const linking = {
-    prefixes: ['alphabook://', 'https://alphabook.com'],
-    config: {
-        screens: {
-            Landing: {
-                path: 'landing',
-                screens: {
-                    Index: 'index',
-                    SignIn: 'sign-in',
-                    SignUp: 'sign-up',
-                },
-            },
-            Main: {
-                path: 'main',
-                screens: {
-                    Index: 'index',
-                    Profile: 'profile',
-                    Search: 'search',
-                    Book: 'book',
-                },
-            },
-        },
-    },
-};
-
 export default function Landing() {
     return (
-        <NavigationContainer independent linking={linking}>
-            <Stack.Navigator initialRouteName="Index">
-                <Stack.Screen name="Index" component={Index} options={{ headerShown: false }} />
-                <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
-                <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
-            </Stack.Navigator>
-        </NavigationContainer>
+        <Stack.Navigator initialRouteName="Index" >
+            <Stack.Screen name="Index" component={Index} options={{ headerShown: false }} />
+            <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
+            <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
+        </Stack.Navigator>
     );
 }

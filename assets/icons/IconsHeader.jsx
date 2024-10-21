@@ -37,3 +37,20 @@ export const IconNotification = ({ width = 18, height = 22, color = "#4F4F4F" })
         </Svg>
     )
 }
+
+export const IconArrowLeft = ({ width = 24, height = 21, color = "#19191B" }) => {
+    return (
+        <Svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={width}
+            height={height}
+            viewBox="0 0 24 21"
+            fill="none"
+        >
+            <Path
+                d="M24 9.138H4.99l6.898-7.212L10.045 0 0 10.5 10.045 21l1.843-1.926-6.899-7.212H24V9.138z"
+                fill={color}
+            />
+        </Svg>
+    )
+}

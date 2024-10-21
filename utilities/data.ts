@@ -6,7 +6,7 @@ export const books = [
             text: 'All',
         },
         items: [
-            { id: 1, title: 'Catcher in the Rye', text: 'Updated: 12/05/2024', image: 'https://edit.org/images/cat/portadas-libros-big-2019101610.jpg' },
+            { id: 1, title: 'Catcher in the Rye', text: 'Updated: 12/05/2024', image: '' },
             { id: 2, title: 'Someone Like You', text: 'Updated: 12/05/2024', image: 'https://marketplace.canva.com/EAE8SCCNlvo/1/0/1003w/canva-verde-y-rosa-ciencia-ficci%C3%B3n-portada-de-libro-SSKxUZUBOJg.jpg' },
             { id: 3, title: 'The Great Gatsby', text: 'Updated: 12/05/2024', image: 'https://edit.org/images/cat/portadas-libros-big-2019101610.jpg' },
             { id: 4, title: 'To Kill a Mockingbird', text: 'Updated: 12/05/2024', image: 'https://marketplace.canva.com/EAE8SCCNlvo/1/0/1003w/canva-verde-y-rosa-ciencia-ficci%C3%B3n-portada-de-libro-SSKxUZUBOJg.jpg' },

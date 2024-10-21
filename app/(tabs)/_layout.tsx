@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View, Text, Animated, StyleSheet } from 'react-native';
-import Index from './index';
+import {  Text, Animated, StyleSheet } from 'react-native';
 import Favorites from './favorites';
 import Settings from './settings';
 import Profile from './profile';
@@ -9,6 +8,7 @@ import { IconHome, IconProfile, IconSaved, IconSettings } from '../../assets/ico
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { useFonts } from 'expo-font';
+import StackIndex from './index';
 
 const Tab = createBottomTabNavigator();
 
@@ -66,8 +66,9 @@ export default function TabLayout() {
         >
             <Tab.Screen
                 name="Home"
-                component={Index}
+                component={StackIndex}
                 options={{
+                    title: 'Home',
                     tabBarLabel: ({ focused }) => <AnimatedLabel focused={focused} title="Home" />,
                     tabBarIcon: ({ focused }) => <IconHome color={focused ? '#EB5757' : '#fff'} />,
                 }}
@@ -76,6 +77,7 @@ export default function TabLayout() {
                 name="Favorites"
                 component={Favorites}
                 options={{
+                    title: 'Favorites',
                     tabBarLabel: ({ focused }) => <AnimatedLabel focused={focused} title="Favorites" />,
                     tabBarIcon: ({ focused }) => <IconSaved color={focused ? '#EB5757' : '#fff'} />,
                 }}
@@ -84,6 +86,7 @@ export default function TabLayout() {
                 name="Settings"
                 component={Settings}
                 options={{
+                    title: 'Settings',
                     tabBarLabel: ({ focused }) => <AnimatedLabel focused={focused} title="Settings" />,
                     tabBarIcon: ({ focused }) => <IconSettings color={focused ? '#EB5757' : '#fff'} />,
                 }}
@@ -92,6 +95,7 @@ export default function TabLayout() {
                 name="Profile"
                 component={Profile}
                 options={{
+                    title: 'Profile',
                     tabBarLabel: ({ focused }) => <AnimatedLabel focused={focused} title="Profile" />,
                     tabBarIcon: ({ focused }) => <IconProfile color={focused ? '#EB5757' : '#fff'} />,
                 }}
