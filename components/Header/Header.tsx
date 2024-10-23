@@ -13,14 +13,24 @@ export const Header = () => {
                 style={({ pressed }) => [
                     styles.menuContainer,
                     {
-                        backgroundColor: pressed ? '#D3D3D3' : 'transparent',
+                        backgroundColor: pressed ? '#E0E0E0' : 'transparent',
                     },
                 ]}
             >
                 <IconMenu />
             </Pressable>
             <View style={styles.containerImage}>
-                <IconNotification />
+                <Pressable
+                    onPress={() => console.log('Notification')}
+                    style={({ pressed }) => [
+                        styles.menuContainer,
+                        {
+                            backgroundColor: pressed ? '#E0E0E0' : 'transparent',
+                        },
+                    ]}
+                >
+                    <IconNotification />
+                </Pressable>
                 <Image
                     source={{
                         uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN6h7AAVpPXDIgzVngWkxS9mcE0tOesmIStA&s',

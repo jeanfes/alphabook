@@ -1,12 +1,12 @@
 import { Carrousel } from '@/components/Carrousel/Carrousel';
 import { Header } from '@/components/Header/Header';
 import { SearchBar } from '@/components/SearchBar/SearchBar';
-import { AuthContext } from '@/context/AuthContext';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useGlobalContext } from '@/context/GlobalContext';
+import { useEffect, useMemo, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { books } from '@/utilities/data';
+import { datalibrary } from '@/utilities/data';
 import { useNavigation } from 'expo-router';
 import { Link, NavigationContainer } from '@react-navigation/native';
 import { CategoryItem } from '@/components/Library/CategoryItem';
@@ -14,33 +14,36 @@ import { BookItem } from '@/components/Library/BookItem';
 import { ReadBook } from '@/pages/ReadBook';
 import { Notifications } from '@/pages/Notifications';
 import { IconArrowLeft } from '@/assets/icons/IconsHeader';
+import { IconSaved } from '@/assets/icons/IconsTabLayout';
+import { useLibrary } from '@/hooks/books/useLibrary';
+import { Book } from '@/interfaces/library';
 
 const Stack = createNativeStackNavigator();
 
 const Index = () => {
-    const { user } = useContext(AuthContext);
+    const { user } = useGlobalContext();
+    const { categories, libraries = [] } = useLibrary();
     const [searchBook, setSearchBook] = useState<string>('');
-    const [selectedCategory, setSelectedCategory] = useState<number | null>(books[0].category.id);
-    const [selectedBooks, setSelectedBooks] = useState(books[0].items);
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+    const [selectedBooks, setSelectedBooks] = useState<Book[]>([]);
     const navigation = useNavigation<any>();
 
-    const categories = books.map((b) => b.category);
-
     const handleSelectCategory = (category: { id: number; text: string }) => {
+        console.log(libraries);
         setSelectedCategory(category?.id);
-        setSelectedBooks(books.find((b) => b.category.id === category?.id)?.items || []);
+        setSelectedBooks(libraries.find((b) => b.category.id === category?.id)?.items || []);
     };
-
+    
     const handleSearchBook = useMemo(() => {
         if (searchBook) {
-            const filteredBooks = books
+            const filteredBooks = libraries
                 .map((b) => b.items)
                 .flat()
                 .filter((b) => b.title.toLowerCase().includes(searchBook.toLowerCase()));
             setSelectedBooks(filteredBooks);
-            setSelectedCategory(books[0].category.id);
+            setSelectedCategory(libraries[0].category.id);
         } else {
-            setSelectedBooks(books.find((b) => b.category.id === selectedCategory)?.items || []);
+            setSelectedBooks(libraries.find((b) => b.category.id === selectedCategory)?.items || []);
         }
     }, [searchBook]);
 
@@ -67,12 +70,12 @@ const Index = () => {
                     </View>
                     <Carrousel
                         data={categories}
-                        renderItem={({ item }) => <CategoryItem onPress={() => handleSelectCategory(item)} category={item} selected={selectedCategory === item.id} />}
+                        renderItem={({ item }) => <CategoryItem onPress={() => handleSelectCategory(item)} category={item} selected={selectedCategory === item?.id} />}
                     />
                     <Carrousel data={selectedBooks} renderItem={({ item }) => <BookItem book={item} onPress={() => navigation.navigate('readbook', { book: item })} />} />
                     <View style={stylesIndex.recommended}>
                         <Text style={stylesIndex.textRecommended}>Recommended for you</Text>
-                        <Carrousel data={books[2].items} renderItem={({ item }) => <BookItem book={item} />} />
+                        <Carrousel data={libraries[0]?.items} renderItem={({ item }) => <BookItem book={item} />} />
                     </View>
                 </View>
             </ScrollView>
@@ -91,29 +94,45 @@ const linking = {
 };
 
 export default function StackIndex() {
+    const { books, saveBook } = useLibrary();
+
+    const handleFavoriteBook = (book: Book) => {
+        if (book?.favorite) {
+            saveBook({ ...book, favorite: false });
+        } else {
+            saveBook({ ...book, favorite: true });
+        }
+    };
+
     return (
         <NavigationContainer independent linking={linking}>
             <Stack.Navigator initialRouteName='Index'>
                 <Stack.Screen
                     options={{
                         headerShown: false,
-                    }} name="index" component={Index} />
+                    }}
+                    name="index"
+                    component={Index}
+                />
                 <Stack.Screen
                     name="readbook"
                     component={ReadBook}
-                    options={{
+                    options={({ route }: any) => ({
                         headerTitle: "",
+                        headerShadowVisible: false,
                         headerLeft: () => (
                             <Link to={"/index"}>
                                 <IconArrowLeft />
                             </Link>
                         ),
                         headerRight: () => (
-                            <Link to={"/index"}>
-                                <IconArrowLeft />
-                            </Link>
+                            <Pressable onPress={() => {
+                                handleFavoriteBook(route?.params?.book);
+                            }}>
+                                <IconSaved color={books.find((item) => item?.id === route?.params?.book?.id)?.favorite ? "#EB5757" : "#fff"} />
+                            </Pressable>
                         ),
-                    }}
+                    })}
                 />
                 <Stack.Screen
                     name="notifications"
@@ -126,7 +145,7 @@ export default function StackIndex() {
                     }}
                 />
             </Stack.Navigator>
-        </NavigationContainer>
+        </NavigationContainer >
     );
 }
 

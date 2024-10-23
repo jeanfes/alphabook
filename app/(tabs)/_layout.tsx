@@ -1,12 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import {  Text, Animated, StyleSheet } from 'react-native';
+import { Text, Animated, StyleSheet } from 'react-native';
 import Favorites from './favorites';
 import Settings from './settings';
 import Profile from './profile';
 import { IconHome, IconProfile, IconSaved, IconSettings } from '../../assets/icons/IconsTabLayout';
 import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
 import { useFonts } from 'expo-font';
 import StackIndex from './index';
 
@@ -39,7 +38,6 @@ const styles = StyleSheet.create({
 });
 
 export default function TabLayout() {
-    const colorScheme = useColorScheme();
     const [loaded] = useFonts({
         OpenSansLight: require('../../assets/fonts/OpenSans-Light.ttf'),
         OpenSansRegular: require('../../assets/fonts/OpenSans-Regular.ttf'),
@@ -55,7 +53,6 @@ export default function TabLayout() {
     return (
         <Tab.Navigator
             screenOptions={{
-                tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
                 headerShown: false,
                 tabBarStyle: {
                     height: 60,
@@ -65,7 +62,7 @@ export default function TabLayout() {
             }}
         >
             <Tab.Screen
-                name="Home"
+                name="home"
                 component={StackIndex}
                 options={{
                     title: 'Home',
@@ -74,7 +71,7 @@ export default function TabLayout() {
                 }}
             />
             <Tab.Screen
-                name="Favorites"
+                name="favorites"
                 component={Favorites}
                 options={{
                     title: 'Favorites',
@@ -83,7 +80,7 @@ export default function TabLayout() {
                 }}
             />
             <Tab.Screen
-                name="Settings"
+                name="settings"
                 component={Settings}
                 options={{
                     title: 'Settings',
@@ -92,7 +89,7 @@ export default function TabLayout() {
                 }}
             />
             <Tab.Screen
-                name="Profile"
+                name="profile"
                 component={Profile}
                 options={{
                     title: 'Profile',

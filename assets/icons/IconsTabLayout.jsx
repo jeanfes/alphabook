@@ -1,7 +1,7 @@
 import * as React from "react"
 import Svg, { Path } from "react-native-svg"
 
-export const IconHome = ({ width = 26, height = 26, color = "none" }) => {
+export const IconHome = ({ width = 26, height = 26, color = "#fff" }) => {
     return (
         <Svg
             xmlns="http://www.w3.org/2000/svg"
@@ -30,7 +30,7 @@ export const IconHome = ({ width = 26, height = 26, color = "none" }) => {
     )
 }
 
-export const IconSaved = ({ width = 26, height = 26, color = "none" }) => {
+export const IconSaved = ({ width = 26, height = 26, color = "#fff" }) => {
     return (
         <Svg
             xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +48,7 @@ export const IconSaved = ({ width = 26, height = 26, color = "none" }) => {
     )
 }
 
-export const IconSettings = ({ width = 26, height = 26, color = "none" }) => {
+export const IconSettings = ({ width = 26, height = 26, color = "#fff" }) => {
     return (
         <Svg
             xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +77,7 @@ export const IconSettings = ({ width = 26, height = 26, color = "none" }) => {
     )
 }
 
-export const IconProfile = ({ width = 26, height = 26, color = "none" }) => {
+export const IconProfile = ({ width = 26, height = 26, color = "#fff" }) => {
     return (
         <Svg
             xmlns="http://www.w3.org/2000/svg"

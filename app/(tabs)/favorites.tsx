@@ -1,11 +1,18 @@
 import { ViewContainer } from '@/components/ViewContainer/ViewContainer';
-import { Link } from 'expo-router';
+import { useLibrary } from '@/hooks/books/useLibrary';
 import { StyleSheet, Text } from 'react-native';
 
 export default function Favorites() {
+    const { books } = useLibrary();
+
     return (
         <ViewContainer>
             <Text>Favorite</Text>
+            {
+                books.filter((book) => book.favorite).map((book) => (
+                    <Text key={book.id}>{book.title}</Text>
+                ))
+            }
         </ViewContainer>
     );
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { AuthProvider } from '@/context/AuthContext';
+import { GlobalProvider } from '@/context/GlobalContext';
 import Navigator from './navigator';
 
 const linking = {
@@ -30,10 +30,10 @@ const linking = {
 
 export default function App() {
     return (
-        <AuthProvider>
+        <GlobalProvider>
             <NavigationContainer independent linking={linking}>
                 <Navigator />
             </NavigationContainer>
-        </AuthProvider>
+        </GlobalProvider>
     );
 }

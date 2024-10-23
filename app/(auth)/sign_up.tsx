@@ -6,9 +6,11 @@ import { useNavigation } from 'expo-router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { ViewContainer } from '@/components/ViewContainer/ViewContainer';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 export default function SignUp() {
     const navigation = useNavigation();
+    const { handleSignIn, user } = useGlobalContext();
 
     const initialValues = {
         name: '',
@@ -36,10 +38,18 @@ export default function SignUp() {
         initialValues,
         validationSchema: validationSchema,
         onSubmit: async (values) => {
-            alert('Register success');
             alert(JSON.stringify(values, null, 2));
             navigation.navigate('SignIn' as never);
+            alert('Register success');
             resetForm();
+            handleSignIn({
+                id: '1',
+                name: values.name,
+                email: values.email,
+                username: values.username,
+                password: values.password,
+                token: 'mi-token',
+            });
         },
         validateOnChange: true,
     });

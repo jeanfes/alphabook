@@ -10,7 +10,7 @@ const { width } = Dimensions.get('window');
 
 export const Carrousel = ({ data, renderItem }: CarrouselProps) => {
     const key = useId();
-
+    
     return (
         <FlatList
             data={data}
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     },
     emptyContainer: {
         width: width - 36,
-        height: 300,
+        height: 320,
         justifyContent: 'center',
         alignItems: 'center',
     },

@@ -23,13 +23,12 @@ export default function Index() {
     };
 
     const handleGoSignUp = () => {
-        alert('Go to sign up');
         navigation.navigate('SignUp' as never);
     };
 
     return (
         <View style={styles.mainContainer}>
-            <StatusBar barStyle="light-content" backgroundColor="#EB5757" />
+            <StatusBar backgroundColor="#EB5757" />
             <Image source={require('../../assets/images/AlphaLogoLight.png')} style={styles.image} />
             <View style={styles.textContainer}>
                 <Text style={{ color: 'white', fontFamily: 'OpenSansExtraBold', fontSize: 48 }}>Welcome</Text>
