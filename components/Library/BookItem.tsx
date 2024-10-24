@@ -13,42 +13,28 @@ interface BookItemProps {
 export const BookItem = ({ book, onPress }: BookItemProps) => {
     return (
         <Pressable onPress={onPress} style={stylesBookItem.bookItem}>
-            {book?.image ?
+            {book?.image ? (
                 <Image
-                    source={{
-                        uri: book?.image,
-                    }}
+                    source={{ uri: book?.image }}
                     style={stylesBookItem.image}
-                /> :
+                />
+            ) : (
                 <Image
                     source={require('@/assets/images/NotFoundImage.png')}
                     style={stylesBookItem.image}
                 />
-            }
+            )}
             <View style={stylesBookItem.textContainer}>
-                <Text
-                    style={{
-                        fontSize: 16,
-                        fontFamily: 'OpenSansBold',
-                        color: '#000000',
-                    }}
-                >
+                <Text style={stylesBookItem.title}>
                     {shortText(book?.title, 16)}
                 </Text>
-                <Text
-                    style={{
-                        fontSize: 12,
-                        fontFamily: 'OpenSansRegular',
-                        color: '#9D9D9D',
-                    }}
-                >
+                <Text style={stylesBookItem.text}>
                     {shortText(book?.text, 20)}
                 </Text>
             </View>
         </Pressable>
     );
 };
-
 
 const stylesBookItem = StyleSheet.create({
     textContainer: {
@@ -62,9 +48,21 @@ const stylesBookItem = StyleSheet.create({
         objectFit: 'fill',
     },
     bookItem: {
+        width: 170,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'flex-start',
         gap: 6,
+        margin: 6,
+    },
+    title: {
+        fontSize: 16,
+        fontFamily: 'OpenSansBold',
+        color: '#000000',
+    },
+    text: {
+        fontSize: 12,
+        fontFamily: 'OpenSansRegular',
+        color: '#9D9D9D',
     },
 });

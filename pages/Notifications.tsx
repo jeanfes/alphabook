@@ -1,12 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
 
 
-export const Notifications = ({ route }: any) => {
-    const { book } = route?.params;
+export const Notifications = () => {
 
     return (
         <View style={stylesIndex.container}>
-            <Text style={stylesIndex.greetingsText}>Read Book ID: {book.id}</Text>
+            <Text style={stylesIndex.greetingsText}>Notificaciones</Text>
         </View>
     );
 };

@@ -38,7 +38,7 @@ export const IconNotification = ({ width = 18, height = 22, color = "#4F4F4F" })
     )
 }
 
-export const IconArrowLeft = ({ width = 24, height = 21, color = "#19191B" }) => {
+export const IconArrowLeft = ({ width = 22, height = 19, color = "#19191B" }) => {
     return (
         <Svg
             xmlns="http://www.w3.org/2000/svg"

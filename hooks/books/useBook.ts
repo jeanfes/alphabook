@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
-import { Book } from "@/interfaces/library";
+import { Book, Library } from "@/interfaces/library";
 import { customFetch } from "@/services/customFetch";
 import { useStorage } from "../storage/useStorage";
-import { useConnection } from "../connection/useConnection";
+//import { useConnection } from "../connection/useConnection";
 import { useGlobalContext } from "@/context/GlobalContext";
+import { useLibrary } from "./useLibrary";
 
 export const useBook = () => {
     const { saveData, getData } = useStorage();
     const [loading, setLoading] = useState(false);
     const [books, setBooks] = useState<Book[]>([]);
     const { token } = useGlobalContext();
+    const { getLibraries, saveLibrary } = useLibrary();
     //const { isConnected } = useConnection();
     const isConnected = false;
 
-
     const saveBook = async (book: Book) => {
+        const actualLibrary = await getLibraries();
         if (isConnected) {
             const response = await customFetch({
                 endpoint: `book/save/${book.id}`,
@@ -23,13 +25,11 @@ export const useBook = () => {
             });
             if (response.success) {
                 try {
-                    const updatedBooks = [...books, book];
-                    const result = await saveData({ key: 'book', value: updatedBooks });
-                    if (result) {
-                        setBooks(updatedBooks);
-                    } else {
-                        console.log('Error saving book');
-                    }
+                    const updatedBooks = actualLibrary?.items.map((item: Book) => {
+                        return item.id === book.id ? book : item;
+                    });
+                    const updatedLibrary = { ...actualLibrary, items: updatedBooks };
+                    await saveLibrary(updatedLibrary);
                 } catch (error) {
                     console.log('Error saving book');
                 }
@@ -38,15 +38,15 @@ export const useBook = () => {
             }
         } else {
             try {
-                const updatedBooks = [...books, book];
-                const result = await saveData({ key: 'books', value: updatedBooks });
-                if (result) {
-                    setBooks(updatedBooks);
-                } else {
-                    console.log('Error saving book');
-                }
+                console.log('updatedBooks', book);
+                const updatedBooks = actualLibrary?.items?.map((item: Book) => {
+                    console.log('book.id',book.id);
+                    console.log('item.id', item.id);
+                    return item.id === book.id ? book : item;
+                });
+                const updatedLibrary = { ...actualLibrary, items: updatedBooks };
+                await saveLibrary(updatedLibrary);
             } catch (error) {
-                console.error('Error saving book:', error);
                 console.log('Error saving book');
             }
         }
@@ -54,8 +54,10 @@ export const useBook = () => {
 
     const removeBook = async (book: Book) => {
         try {
-            const updatedBooks = books.filter(item => item.id !== book.id);
-            const result = await saveData({ key: 'books', value: updatedBooks });
+            const actualLibrary = await getLibraries();
+            const updatedBooks = actualLibrary?.items.filter((item: Book) => item.id !== book.id);
+            const updatedLibrary = { ...actualLibrary, items: updatedBooks };
+            const result = await saveData({ key: 'library', value: updatedLibrary });
             if (result) {
                 setBooks(updatedBooks);
             } else {

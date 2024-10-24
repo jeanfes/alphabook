@@ -4,35 +4,32 @@ import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
 interface CarrouselProps {
     data: any;
     renderItem: ({ item }: { item: any }) => JSX.Element;
+    horizontal?: boolean;
 }
 
 const { width } = Dimensions.get('window');
 
-export const Carrousel = ({ data, renderItem }: CarrouselProps) => {
+export const Carrousel = ({ data, renderItem, horizontal = true }: CarrouselProps) => {
     const key = useId();
-    
+    const itemWidth = 205;
+    const numColumns = horizontal ? 1 : Math.floor(width / itemWidth);
+
     return (
         <FlatList
             data={data}
             key={key}
+            contentContainerStyle={horizontal ? {} : styles.container}
+            numColumns={numColumns}
             keyExtractor={(item, index) => `${item.id}-${index}-${key}`}
             renderItem={renderItem}
-            horizontal
+            horizontal={horizontal}
+            showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={() => <View style={styles.separator} />}
-            ListFooterComponent={() => <View style={styles.lastSeparator} />}
+            ItemSeparatorComponent={() => <View style={horizontal ? styles.horizontalSeparator : styles.verticalSeparator} />}
+            ListFooterComponent={() => <View style={horizontal ? styles.horizontalSeparator : styles.verticalSeparator} />}
             ListEmptyComponent={() => (
                 <View style={styles.emptyContainer}>
-                    <Text
-                        style={{
-                            fontFamily: 'OpenSansRegular',
-                            fontSize: 18,
-                            color: '#9D9D9D',
-                            textAlign: 'center',
-                        }}
-                    >
-                        No hay elementos
-                    </Text>
+                    <Text style={styles.emptyText}>No hay elementos</Text>
                 </View>
             )}
         />
@@ -40,16 +37,27 @@ export const Carrousel = ({ data, renderItem }: CarrouselProps) => {
 };
 
 const styles = StyleSheet.create({
-    separator: {
+    container: {
+        width: '100%',
+        alignItems: 'center',
+    },
+    horizontalSeparator: {
         width: 12,
     },
-    lastSeparator: {
-        width: 18,
+    verticalSeparator: {
+        height: 12,
     },
     emptyContainer: {
-        width: width - 36,
-        height: 320,
+        width: '100%',
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        height: 200,
+    },
+    emptyText: {
+        fontFamily: 'OpenSansRegular',
+        fontSize: 18,
+        color: '#9D9D9D',
+        textAlign: 'center',
     },
 });

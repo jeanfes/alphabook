@@ -31,7 +31,7 @@ export const useSecureStorage = () => {
         try {
             const result = await SecureStore.getItemAsync(key);
             if (result) {
-                return result;
+                return result ? JSON.parse(result) : null;
             }
         } catch (error) {
             console.error('Error al recuperar los datos seguros:', error);

@@ -2,9 +2,11 @@ import { IconMenu, IconNotification } from '@/assets/icons/IconsHeader';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { MenuBar } from '../MenuBar/MenuBar';
 import { useState } from 'react';
+import { useNavigation } from 'expo-router';
 
 export const Header = () => {
     const [menuVisible, setMenuVisible] = useState(false);
+    const navigation = useNavigation<any>();
 
     return (
         <View style={styles.header}>
@@ -21,7 +23,7 @@ export const Header = () => {
             </Pressable>
             <View style={styles.containerImage}>
                 <Pressable
-                    onPress={() => console.log('Notification')}
+                    onPress={() => navigation.navigate('notifications')}
                     style={({ pressed }) => [
                         styles.menuContainer,
                         {

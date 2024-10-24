@@ -11,7 +11,7 @@ interface CategoryItemProps {
 
 
 export const CategoryItem = ({ category, selected, onPress }: CategoryItemProps) => {
-    
+
     return (
         <Pressable
             onPress={onPress}

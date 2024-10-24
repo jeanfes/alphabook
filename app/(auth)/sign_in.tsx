@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, StatusBar, Image, Text, Pressable } from 'react-native';
 import { ViewContainer } from '@/components/ViewContainer/ViewContainer';
 import { InputDynamic } from '@/components/Inputs/InputDynamic';
@@ -24,11 +24,6 @@ export default function SignIn() {
     const handleGoSignUp = () => {
         navigation.navigate('SignUp' as never);
     };
-
-    useEffect(() => {
-        const userData = { id: "1", name: "Jean", username: username, password: password, token: "mi-token", email: "jeanescobar7@hotmail.com" };
-        handleSignIn(userData);
-    }, []);
 
     return (
         <ViewContainer>

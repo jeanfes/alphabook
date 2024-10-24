@@ -4,11 +4,11 @@
     "slug": "alphabook",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/AlphaLogoDark.png",
+    "icon": "./assets/icons-app/all/ic_launcher.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/AlphaLogoDark.png",
+      "image": "./assets/icons-app/all/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/AlphaLogoDark.png",
+        "foregroundImage": "./assets/icons-app/android/ic_launcher_foreground.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.starindustries.alphabook"
@@ -25,7 +25,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/AlphaLogoDark.png"
+      "favicon": "./assets/icons-app/all/ic_launcher.png"
     },
     "plugins": [
       "expo-router",

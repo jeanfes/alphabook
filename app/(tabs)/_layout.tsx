@@ -1,13 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, Animated, StyleSheet } from 'react-native';
-import Favorites from './favorites';
 import Settings from './settings';
 import Profile from './profile';
 import { IconHome, IconProfile, IconSaved, IconSettings } from '../../assets/icons/IconsTabLayout';
-import { Colors } from '@/constants/Colors';
 import { useFonts } from 'expo-font';
 import StackIndex from './index';
+import StackFavorites from './favorites';
 
 const Tab = createBottomTabNavigator();
 
@@ -72,8 +71,14 @@ export default function TabLayout() {
             />
             <Tab.Screen
                 name="favorites"
-                component={Favorites}
+                component={StackFavorites}
                 options={{
+                    headerShown: true,
+                    headerTitleStyle: {
+                        color: '#000',
+                        fontFamily: 'OpenSansBold',
+                        fontSize: 26,
+                    },
                     title: 'Favorites',
                     tabBarLabel: ({ focused }) => <AnimatedLabel focused={focused} title="Favorites" />,
                     tabBarIcon: ({ focused }) => <IconSaved color={focused ? '#EB5757' : '#fff'} />,
