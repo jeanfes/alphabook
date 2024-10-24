@@ -10,15 +10,16 @@
     "splash": {
       "image": "./assets/icons-app/all/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFFFFF"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.starindustries.alphabook"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons-app/android/ic_launcher_foreground.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#FFFFFF"
       },
       "package": "com.starindustries.alphabook"
     },
