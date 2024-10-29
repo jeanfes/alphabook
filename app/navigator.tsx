@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabLayout from './(tabs)/_layout';
 import Landing from './(auth)/_layout';
 import { useGlobalContext } from '@/context/GlobalContext';
-import { useSecureStorage } from '@/hooks/storage/useSecureStorage';
 
 const RootStack = createNativeStackNavigator();
 

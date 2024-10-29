@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
 
 interface CarrouselProps {
@@ -7,18 +7,21 @@ interface CarrouselProps {
     horizontal?: boolean;
 }
 
-const { width } = Dimensions.get('window');
-
 export const Carrousel = ({ data, renderItem, horizontal = true }: CarrouselProps) => {
     const key = useId();
-    const itemWidth = 205;
-    const numColumns = horizontal ? 1 : Math.floor(width / itemWidth);
+    const numColumns = horizontal ? 1 : 2;
 
     return (
         <FlatList
             data={data}
             key={key}
-            contentContainerStyle={horizontal ? {} : styles.container}
+            contentContainerStyle={
+                horizontal
+                    ? {
+                          flexGrow: 0,
+                      }
+                    : styles.container
+            }
             numColumns={numColumns}
             keyExtractor={(item, index) => `${item.id}-${index}-${key}`}
             renderItem={renderItem}
@@ -38,8 +41,9 @@ export const Carrousel = ({ data, renderItem, horizontal = true }: CarrouselProp
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: '#FFFFFF',
         width: '100%',
-        alignItems: 'center',
+        alignSelf: 'flex-start',
     },
     horizontalSeparator: {
         width: 12,
@@ -48,11 +52,10 @@ const styles = StyleSheet.create({
         height: 12,
     },
     emptyContainer: {
-        width: '100%',
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        height: 200,
+        height: 340,
     },
     emptyText: {
         fontFamily: 'OpenSansRegular',

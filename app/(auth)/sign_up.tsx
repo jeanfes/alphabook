@@ -90,7 +90,7 @@ export default function SignUp() {
                 <View style={styles.haveAccount}>
                     <Text style={{ color: '#828282', marginLeft: 4, fontFamily: 'OpenSansRegular', fontWeight: '500' }}>Already have an account?</Text>
                     <Pressable onPress={handleGoSignIn}>
-                        <Text style={{ color: '#828282', marginLeft: 4, fontFamily: 'OpenSansSemiBold', fontWeight: '700' }}>Sign in here</Text>
+                        <Text style={{ color: '#828282', paddingLeft: 4, fontFamily: 'OpenSansSemiBold', fontWeight: '700', padding: 20 }}>Sign in here</Text>
                     </Pressable>
                 </View>
             </View>

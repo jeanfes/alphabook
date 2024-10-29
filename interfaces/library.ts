@@ -15,4 +15,5 @@ export interface Book {
     text: string;
     image: string;
     favorite: boolean;
+    categoryId: number;
 }

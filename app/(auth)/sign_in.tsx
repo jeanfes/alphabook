@@ -14,7 +14,7 @@ export default function SignIn() {
 
     const handleLogin = () => {
         if (username === 'jeanfes' && password === '123456') {
-            const userData = { id: "1", name: "Jean", username: username, password: password, token: "mi-token", email: "jeanescobar7@hotmail.com" };
+            const userData = { id: '1', name: 'Jean', username: username, password: password, token: 'mi-token', email: 'jeanescobar7@hotmail.com' };
             handleSignIn(userData);
         } else {
             alert('Login failed');
@@ -38,7 +38,7 @@ export default function SignIn() {
                 <View style={styles.haveAccount}>
                     <Text style={{ color: '#828282', marginLeft: 4, fontFamily: 'OpenSansRegular', fontWeight: 500 }}>Don't have an account yet?</Text>
                     <Pressable onPress={handleGoSignUp}>
-                        <Text style={{ color: '#828282', marginLeft: 4, fontFamily: 'OpenSansSemiBold', fontWeight: 700 }}>Sign up here</Text>
+                        <Text style={{ color: '#828282', fontFamily: 'OpenSansSemiBold', fontWeight: 700, padding: 20, paddingLeft: 4 }}>Sign up here</Text>
                     </Pressable>
                 </View>
             </View>

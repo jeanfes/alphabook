@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useStorage } from "../storage/useStorage";
 import { Library } from "@/interfaces/library";
 import { customFetch } from "@/services/customFetch";
-import { datalibrary } from "@/utilities/data";
 //import { useConnection } from "../connection/useConnection";
 import { useGlobalContext } from "@/context/GlobalContext";
 import { useBook } from "./useBook";
@@ -57,11 +56,6 @@ export const useLibrary = () => {
             console.log('Error removing library');
         }
     }
-
-    // Cargar libros al iniciar la aplicación
-    useEffect(() => {
-        saveLibrary(datalibrary);
-    }, [datalibrary]);
 
     useEffect(() => {
         getLibraries();

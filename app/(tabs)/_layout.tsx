@@ -73,12 +73,6 @@ export default function TabLayout() {
                 name="favorites"
                 component={StackFavorites}
                 options={{
-                    headerShown: true,
-                    headerTitleStyle: {
-                        color: '#000',
-                        fontFamily: 'OpenSansBold',
-                        fontSize: 26,
-                    },
                     title: 'Favorites',
                     tabBarLabel: ({ focused }) => <AnimatedLabel focused={focused} title="Favorites" />,
                     tabBarIcon: ({ focused }) => <IconSaved color={focused ? '#EB5757' : '#fff'} />,

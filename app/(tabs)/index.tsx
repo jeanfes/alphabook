@@ -4,7 +4,7 @@ import { SearchBar } from '@/components/SearchBar/SearchBar';
 import { useGlobalContext } from '@/context/GlobalContext';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from 'expo-router';
 import { Link, NavigationContainer } from '@react-navigation/native';
@@ -14,34 +14,39 @@ import { ReadBook } from '@/pages/ReadBook';
 import { Notifications } from '@/pages/Notifications';
 import { IconArrowLeft } from '@/assets/icons/IconsHeader';
 import { IconSaved } from '@/assets/icons/IconsTabLayout';
-import { useLibrary } from '@/hooks/books/useLibrary';
-import { Book, Library } from '@/interfaces/library';
+import { Book } from '@/interfaces/library';
 import { useBook } from '@/hooks/books/useBook';
+import { dataCategories } from '@/utilities/data';
 
 const Stack = createNativeStackNavigator();
 
 const Index = () => {
     const { user, userMemory } = useGlobalContext();
-    const { getLibraries } = useLibrary();
+    const { books } = useBook();
     const [searchBook, setSearchBook] = useState<string>('');
-    const [libraries, setLibraries] = useState<Library[]>([]);
-    const [categories, setCategories] = useState<{ id: number; text: string }[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<number | null>();
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(books ? dataCategories[0]?.id : null);
     const [selectedBooks, setSelectedBooks] = useState<Book[]>([]);
     const navigation = useNavigation<any>();
 
     const handleSelectCategory = (category: { id: number; text: string }) => {
+        if (category.id === 0) {
+            setSelectedBooks(books);
+            setSelectedCategory(dataCategories[0]?.id);
+            setSearchBook('');
+            return;
+        }
+        setSelectedBooks(books.filter((b) => b.categoryId === category.id));
         setSelectedCategory(category?.id);
-        setSelectedBooks(libraries.find((b) => b.category.id === category?.id)?.items || []);
+        setSearchBook('');
     };
 
     const handleSearchBook = useMemo(() => {
         if (searchBook) {
-            const filteredBooks = libraries?.map((b) => b.items)?.flat()?.filter((b) => b.title.toLowerCase().includes(searchBook.toLowerCase()));
+            const filteredBooks = books.filter((b) => b.title.toLowerCase().includes(searchBook.toLowerCase()));
             setSelectedBooks(filteredBooks);
-            setSelectedCategory(libraries[0].category?.id);
+            setSelectedCategory(dataCategories[0]?.id);
         } else {
-            setSelectedBooks(libraries.find((b) => b.category?.id === selectedCategory)?.items || []);
+            setSelectedBooks(books);
         }
     }, [searchBook]);
 
@@ -49,17 +54,11 @@ const Index = () => {
         handleSearchBook;
     }, [searchBook]);
 
-    const getAllData = useCallback(async () => {
-        const libraries = await getLibraries();
-        setLibraries(libraries);
-        setCategories(libraries.map((b: Library) => b.category));
-        setSelectedCategory(libraries[0]?.category?.id);
-        setSelectedBooks(libraries[0]?.items);
-    }, [getLibraries]);
-
     useEffect(() => {
-        getAllData();
-    }, []);
+        if (books) {
+            setSelectedBooks(books);
+        }
+    }, [books]);
 
     return (
         <SafeAreaView
@@ -78,22 +77,22 @@ const Index = () => {
                     <View style={stylesIndex.homeContainer}>
                         <SearchBar search={searchBook} setSearch={setSearchBook} showMicro />
                     </View>
-                    {categories?.length > 0 &&
+                    {dataCategories?.length > 0 && (
                         <Carrousel
-                            data={categories}
+                            data={dataCategories}
                             renderItem={({ item }) => <CategoryItem onPress={() => handleSelectCategory(item)} category={item} selected={selectedCategory === item?.id} />}
                         />
-                    }
+                    )}
                     <Carrousel data={selectedBooks} renderItem={({ item }) => <BookItem book={item} onPress={() => navigation.navigate('readbook', { book: item })} />} />
                     <View style={stylesIndex.recommended}>
                         <Text style={stylesIndex.textRecommended}>Recommended for you</Text>
-                        <Carrousel data={libraries[2]?.items} renderItem={({ item }) => <BookItem book={item} />} />
+                        <Carrousel data={books} renderItem={({ item }) => <BookItem book={item} />} />
                     </View>
                 </View>
             </ScrollView>
         </SafeAreaView>
     );
-}
+};
 
 const linking = {
     prefixes: ['https://alphabook.com', 'alphabook://'],
@@ -106,42 +105,32 @@ const linking = {
 };
 
 export default function StackIndex() {
-    const { getLibraries } = useLibrary();
-    const { saveBook, books: globalBooks } = useBook();
-    const [books, setBooks] = useState<Book[]>([]);
+    const { saveBook, books } = useBook();
 
     const handleFavoriteBook = (book: Book) => {
-        console.log('book', book);
-        saveBook({ ...book, favorite: !book?.favorite });
+        saveBook({ ...book, favorite: !book.favorite });
     };
 
-    const getAllBooks = useCallback(async () => {
-        const libraries = await getLibraries();
-        setBooks(libraries?.map((b: Library) => b.items)?.flat());
-    }, [getLibraries]);
-
-    useEffect(() => {
-        getAllBooks();
-    }, []);
-
-    useEffect(() => {
-        setBooks(globalBooks);
-    }, [globalBooks]);
+    const getColorFavorite = async (book: Book) => {
+        if (books) {
+            return books.some((b: Book) => b.id === book.id && b.favorite);
+        }
+    };
 
     return (
         <NavigationContainer independent linking={linking}>
-            <Stack.Navigator initialRouteName='Index'>
+            <Stack.Navigator initialRouteName="Index">
                 <Stack.Screen
                     options={{
                         gestureDirection: 'horizontal',
                         customAnimationOnGesture: true,
                         headerShown: false,
                     }}
-                    name='index'
+                    name="index"
                     component={Index}
                 />
                 <Stack.Screen
-                    name='readbook'
+                    name="readbook"
                     component={ReadBook}
                     options={({ route }: any) => ({
                         headerTitle: '',
@@ -152,31 +141,48 @@ export default function StackIndex() {
                             fontSize: 20,
                         },
                         headerLeft: () => (
-                            <Link to={'/index'}>
+                            <Link to={'/index'} style={{ paddingRight: 30 }}>
                                 <IconArrowLeft />
                             </Link>
                         ),
-                        headerRight: () => (
-                            <Pressable onPress={() => {
-                                handleFavoriteBook(route?.params?.book);
-                            }}>
-                                <IconSaved color={books.find((item) => item?.id === route?.params?.book?.id)?.favorite ? '#EB5757' : '#fff'} />
-                            </Pressable>
-                        ),
+                        headerRight: () => {
+                            const [isFavorite, setIsFavorite] = useState<boolean | undefined>(false);
+                            useEffect(() => {
+                                const checkFavorite = async () => {
+                                    const favorite = await getColorFavorite(route?.params?.book);
+                                    setIsFavorite(favorite);
+                                };
+                                checkFavorite();
+                            }, [route?.params?.book]);
+                            return (
+                                <Pressable
+                                    onPress={() => {
+                                        handleFavoriteBook(route?.params?.book);
+                                        setIsFavorite(!isFavorite);
+                                    }}
+                                >
+                                    <IconSaved color={isFavorite ? '#EB5757' : '#fff'} />
+                                </Pressable>
+                            );
+                        },
                     })}
                 />
                 <Stack.Screen
-                    name='notifications'
+                    name="notifications"
                     component={Notifications}
                     options={{
                         headerTitle: 'Notifications',
+                        animation: Platform.select({
+                            ios: 'simple_push',
+                            android: 'slide_from_right',
+                        }),
                         headerTitleStyle: {
                             color: '#000',
-                            fontFamily: 'OpenSansBold',
+                            fontFamily: 'OpenSansSemiBold',
                             fontSize: 20,
                         },
                         headerLeft: () => (
-                            <Link to={'/index'} style={{ marginRight: 30 }}>
+                            <Link to={'/index'} style={{ paddingRight: 30 }}>
                                 <IconArrowLeft />
                             </Link>
                         ),

@@ -1,22 +1,21 @@
-import { useEffect, useState } from "react";
-import { Book, Library } from "@/interfaces/library";
-import { customFetch } from "@/services/customFetch";
-import { useStorage } from "../storage/useStorage";
+import { useEffect, useState } from 'react';
+import { Book, Library } from '@/interfaces/library';
+import { customFetch } from '@/services/customFetch';
+import { useStorage } from '../storage/useStorage';
 //import { useConnection } from "../connection/useConnection";
-import { useGlobalContext } from "@/context/GlobalContext";
-import { useLibrary } from "./useLibrary";
+import { useGlobalContext } from '@/context/GlobalContext';
+import { useLibrary } from './useLibrary';
+import { dataBooks } from '@/utilities/data';
 
 export const useBook = () => {
     const { saveData, getData } = useStorage();
     const [loading, setLoading] = useState(false);
     const [books, setBooks] = useState<Book[]>([]);
     const { token } = useGlobalContext();
-    const { getLibraries, saveLibrary } = useLibrary();
     //const { isConnected } = useConnection();
     const isConnected = false;
 
     const saveBook = async (book: Book) => {
-        const actualLibrary = await getLibraries();
         if (isConnected) {
             const response = await customFetch({
                 endpoint: `book/save/${book.id}`,
@@ -24,42 +23,69 @@ export const useBook = () => {
                 token: token,
             });
             if (response.success) {
+                setLoading(true);
                 try {
-                    const updatedBooks = actualLibrary?.items.map((item: Book) => {
-                        return item.id === book.id ? book : item;
-                    });
-                    const updatedLibrary = { ...actualLibrary, items: updatedBooks };
-                    await saveLibrary(updatedLibrary);
+                    const actualBooks: Book[] = await getData({ key: 'books' });
+                    let updatedBooks: Book[];
+                    if (actualBooks) {
+                        const bookIndex = actualBooks.findIndex((b) => b.id === book.id);
+                        if (bookIndex !== -1) {
+                            // Reemplazar el libro existente
+                            updatedBooks = [...actualBooks];
+                            updatedBooks[bookIndex] = book;
+                        } else {
+                            // Agregar el nuevo libro
+                            updatedBooks = [...actualBooks, book];
+                        }
+                    } else {
+                        // Si no hay libros, agregar el nuevo libro
+                        updatedBooks = [book];
+                    }
+                    await saveData({ key: 'books', value: updatedBooks });
+                    return updatedBooks;
                 } catch (error) {
-                    console.log('Error saving book');
+                    console.log('Error saving book:', error);
+                    return false;
+                } finally {
+                    setLoading(false);
                 }
             } else {
                 console.log('Error saving book');
             }
         } else {
+            setLoading(true);
             try {
-                console.log('updatedBooks', book);
-                const updatedBooks = actualLibrary?.items?.map((item: Book) => {
-                    console.log('book.id',book.id);
-                    console.log('item.id', item.id);
-                    return item.id === book.id ? book : item;
-                });
-                const updatedLibrary = { ...actualLibrary, items: updatedBooks };
-                await saveLibrary(updatedLibrary);
+                const actualBooks: Book[] = (await getData({ key: 'books' })) || [];
+                const bookIndex = actualBooks.findIndex((b) => b.id === book.id);
+                let updatedBooks: Book[];
+                if (bookIndex !== -1) {
+                    // Reemplazar el libro existente
+                    updatedBooks = [...actualBooks];
+                    updatedBooks[bookIndex] = book;
+                } else {
+                    // Agregar el nuevo libro
+                    updatedBooks = [...actualBooks, book];
+                }
+
+                await saveData({ key: 'books', value: updatedBooks });
+                setBooks(updatedBooks); // Actualizar el estado local
+                return updatedBooks;
             } catch (error) {
-                console.log('Error saving book');
+                console.log('Error saving book:', error);
+                return false;
+            } finally {
+                setLoading(false);
             }
         }
     };
 
     const removeBook = async (book: Book) => {
         try {
-            const actualLibrary = await getLibraries();
-            const updatedBooks = actualLibrary?.items.filter((item: Book) => item.id !== book.id);
-            const updatedLibrary = { ...actualLibrary, items: updatedBooks };
-            const result = await saveData({ key: 'library', value: updatedLibrary });
+            const actualBooks = await getData({ key: 'books' });
+            const updatedBooks = actualBooks.filter((item: Book) => item.id !== book.id);
+            const result = await saveBook(updatedBooks);
             if (result) {
-                setBooks(updatedBooks);
+                return updatedBooks;
             } else {
                 console.log('Error removing book');
             }
@@ -72,7 +98,7 @@ export const useBook = () => {
         setLoading(true);
         try {
             // Obtener libros de la memoria
-            const memoryBooks = await getData({ key: 'books' }) || [];
+            const memoryBooks = (await getData({ key: 'books' })) || [];
             if (isConnected) {
                 // Obtener libros de la nube
                 const response = await customFetch({
@@ -105,13 +131,13 @@ export const useBook = () => {
                 // Guardar libros actualizados en la memoria
                 const result = await saveData({ key: 'books', value: updatedBooks });
                 if (result) {
-                    setBooks(updatedBooks);
+                    return memoryBooks;
                 } else {
-                    setBooks([]);
+                    return false;
                 }
             } else {
                 // Si no hay conexión, usar los libros de la memoria
-                setBooks(memoryBooks);
+                return memoryBooks;
             }
         } catch (error) {
             console.log('Error durante la sincronización de libros:', error);
@@ -119,9 +145,45 @@ export const useBook = () => {
             setLoading(false);
         }
     };
-    useEffect(() => {
-        syncBooks();
-    }, [isConnected]);
 
-    return { loading, removeBook, syncBooks, saveBook, books };
-}
+    const getBooks = async () => {
+        setLoading(true);
+        try {
+            const data = await getData({ key: 'books' });
+            setBooks(data || []); // Asegurarse de que el estado local se actualice correctamente
+        } catch (error) {
+            console.log('Error getting books');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const removeAll = async () => {
+        try {
+            await saveData({ key: 'books', value: [] });
+            setBooks([]); // Actualizar el estado local
+        } catch (error) {
+            console.log('Error removing books');
+        }
+    };
+
+    // useEffect(() => {
+    //     syncBooks();
+    // }, []);
+
+    // Cargar libros al iniciar la aplicación
+    useEffect(() => {
+        const initializeBooks = async () => {
+            const storedBooks = await getData({ key: 'books' });
+            if (!storedBooks || storedBooks.length === 0) {
+                await saveData({ key: 'books', value: dataBooks });
+                setBooks(dataBooks);
+            } else {
+                setBooks(storedBooks);
+            }
+        };
+        initializeBooks();
+    }, []);
+
+    return { loading, removeBook, syncBooks, saveBook, removeAll, books };
+};

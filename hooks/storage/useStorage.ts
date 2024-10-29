@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect } from 'react';
 
 export const useStorage = () => {
-    const saveData = async ({ key, value }: { key: string, value: any }) => {
+    const saveData = async ({ key, value }: { key: string; value: any }) => {
         try {
             const jsonValue = JSON.stringify(value);
+            console.log('jsonValue', jsonValue);
             await AsyncStorage.setItem(key, jsonValue);
             return true;
         } catch (error) {

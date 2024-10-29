@@ -19,7 +19,6 @@ const stylesIndex = StyleSheet.create({
     },
     greetingsText: {
         fontSize: 20,
-        fontFamily: 'OpenSansRegular',
-        fontWeight: '500',
+        fontFamily: 'OpenSansSemiBold',
     },
 });

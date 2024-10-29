@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Text, View, Modal, TouchableOpacity, Dimensions, Pressable, Animated } from 'react-native';
+import { StyleSheet, Text, View, Modal, TouchableOpacity, Dimensions, Pressable, Animated, Easing, ScrollView } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 
 interface MenuBarProps {
@@ -18,14 +18,16 @@ export const MenuBar = ({ menuVisible = false, setMenuVisible }: MenuBarProps) =
             setVisible(true);
             Animated.timing(slideAnim, {
                 toValue: 0,
-                duration: 300,
+                duration: 240,
                 useNativeDriver: true,
+                easing: Easing.out(Easing.ease),
             }).start();
         } else {
             Animated.timing(slideAnim, {
                 toValue: -width,
-                duration: 300,
+                duration: 280,
                 useNativeDriver: true,
+                easing: Easing.in(Easing.ease),
             }).start(() => setVisible(false));
         }
     }, [menuVisible]);
@@ -58,9 +60,11 @@ export const MenuBar = ({ menuVisible = false, setMenuVisible }: MenuBarProps) =
             <View style={styles.overlay}>
                 <TouchableOpacity style={styles.overlayTouchable} onPress={toggleMenu} />
                 <Animated.View style={[styles.menu, { transform: [{ translateX: slideAnim }] }]}>
-                    <Pressable onPress={handleFileUpload} style={styles.menuItem}>
-                        <Text>Upload File</Text>
-                    </Pressable>
+                    <ScrollView>
+                        <Pressable onPress={handleFileUpload} style={styles.menuItem}>
+                            <Text>Upload File</Text>
+                        </Pressable>
+                    </ScrollView>
                 </Animated.View>
             </View>
         </Modal>
@@ -85,8 +89,8 @@ const styles = StyleSheet.create({
         bottom: 0,
     },
     menu: {
-        width: "70%",
-        height: "100%",
+        width: '70%',
+        height: '100%',
         backgroundColor: 'white',
         padding: 16,
         position: 'absolute',
