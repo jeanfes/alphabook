@@ -18,7 +18,7 @@ export const Carrousel = ({ data, renderItem, horizontal = true }: CarrouselProp
             contentContainerStyle={
                 horizontal
                     ? {
-                          flexGrow: 0,
+                          flexGrow: 1,
                       }
                     : styles.container
             }
