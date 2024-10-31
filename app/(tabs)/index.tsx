@@ -182,7 +182,7 @@ export default function StackIndex() {
                             fontSize: 20,
                         },
                         headerLeft: () => (
-                            <Link to={'/index'} style={{ paddingRight: 30 }}>
+                            <Link to={'/index'} style={{ padding: 8, paddingRight: 24 }}>
                                 <IconArrowLeft />
                             </Link>
                         ),
