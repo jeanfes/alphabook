@@ -9,87 +9,90 @@ interface SearchBarProps {
     showMicro: boolean;
 }
 
-const VoiceRecognition = () => {
-    console.log('Voice Recognition');
-};
 
 export const SearchBar = ({ search, setSearch, showMicro }: SearchBarProps) => {
-    const [recognized, setRecognized] = useState('');
-    const [started, setStarted] = useState('');
-    const [results, setResults] = useState<string[]>([]);
+    // const [recognized, setRecognized] = useState('');
+    // const [started, setStarted] = useState('');
+    // const [results, setResults] = useState<string[]>([]);
 
-    useEffect(() => {
-        Voice.onSpeechStart = onSpeechStart;
-        Voice.onSpeechRecognized = onSpeechRecognized;
-        Voice.onSpeechResults = onSpeechResults;
+    // useEffect(() => {
+    //     if (Voice) {
+    //         Voice.onSpeechStart = onSpeechStart;
+    //         Voice.onSpeechRecognized = onSpeechRecognized;
+    //         Voice.onSpeechResults = onSpeechResults;
+    //     } else {
+    //         console.error('Voice is not initialized');
+    //     }
 
-        return () => {
-            Voice.destroy().then(Voice.removeAllListeners);
-        };
-    }, []);
+    //     return () => {
+    //         if (Voice) {
+    //             Voice.destroy().then(Voice.removeAllListeners);
+    //         }
+    //     };
+    // }, []);
 
-    const onSpeechStart = (e: any) => {
-        setStarted('√');
-    };
+    // const onSpeechStart = (e: any) => {
+    //     setStarted('√');
+    // };
 
-    const onSpeechRecognized = (e: any) => {
-        setRecognized('√');
-    };
+    // const onSpeechRecognized = (e: any) => {
+    //     setRecognized('√');
+    // };
 
-    const onSpeechResults = (e: any) => {
-        setResults(e.value);
-    };
+    // const onSpeechResults = (e: any) => {
+    //     setResults(e.value);
+    // };
 
-    const startRecognizing = async () => {
-        try {
-            if (Platform.OS === 'android') {
-                const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, {
-                    title: 'Microphone Permission',
-                    message: 'App needs access to your microphone to recognize speech.',
-                    buttonNeutral: 'Ask Me Later',
-                    buttonNegative: 'Cancel',
-                    buttonPositive: 'OK',
-                });
-                if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-                    console.log('Microphone permission denied');
-                    return;
-                }
-            }
-            await Voice.start('en-US');
-            setRecognized('');
-            setStarted('');
-            setResults([]);
-        } catch (e) {
-            console.error(e);
-        }
-    };
+    // const startRecognizing = async () => {
+    //     try {
+    //         if (Platform.OS === 'android') {
+    //             const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.RECORD_AUDIO, {
+    //                 title: 'Microphone Permission',
+    //                 message: 'App needs access to your microphone to recognize speech.',
+    //                 buttonNeutral: 'Ask Me Later',
+    //                 buttonNegative: 'Cancel',
+    //                 buttonPositive: 'OK',
+    //             });
+    //             if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+    //                 console.log('Microphone permission denied');
+    //                 return;
+    //             }
+    //         }
+    //         await Voice.start('en-US');
+    //         setRecognized('');
+    //         setStarted('');
+    //         setResults([]);
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
+    // };
 
-    const stopRecognizing = async () => {
-        try {
-            await Voice.stop();
-        } catch (e) {
-            console.error(e);
-        }
-    };
+    // const stopRecognizing = async () => {
+    //     try {
+    //         await Voice.stop();
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
+    // };
 
-    const cancelRecognizing = async () => {
-        try {
-            await Voice.cancel();
-        } catch (e) {
-            console.error(e);
-        }
-    };
+    // const cancelRecognizing = async () => {
+    //     try {
+    //         await Voice.cancel();
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
+    // };
 
-    const destroyRecognizer = async () => {
-        try {
-            await Voice.destroy();
-            setRecognized('');
-            setStarted('');
-            setResults([]);
-        } catch (e) {
-            console.error(e);
-        }
-    };
+    // const destroyRecognizer = async () => {
+    //     try {
+    //         await Voice.destroy();
+    //         setRecognized('');
+    //         setStarted('');
+    //         setResults([]);
+    //     } catch (e) {
+    //         console.error(e);
+    //     }
+    // };
 
     return (
         <View style={styles.container}>
@@ -97,7 +100,7 @@ export const SearchBar = ({ search, setSearch, showMicro }: SearchBarProps) => {
             <TextInput style={styles.input} placeholder="Search here" value={search} onChangeText={setSearch} />
             {showMicro && (
                 <Pressable
-                    onPress={startRecognizing}
+                    onPress={() => { }}
                     style={({ pressed }) => [
                         styles.microphoneContainer,
                         {

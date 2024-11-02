@@ -1,10 +1,10 @@
 import { ViewContainer } from '@/components/ViewContainer/ViewContainer';
 import { Text } from 'react-native';
 
-export default function Settings() {
+export default function Store() {
     return (
         <ViewContainer>
-            <Text>Settings</Text>
+            <Text>Store</Text>
         </ViewContainer>
     );
 }

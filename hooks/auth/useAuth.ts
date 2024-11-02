@@ -42,6 +42,7 @@ export { initialStateAuth, reducerAuthentication };
 export const useAuthentication = () => {
     const [{ user, token }, dispatch] = useReducer(reducerAuthentication, initialStateAuth);
     const [userMemory, setUserMemory] = useState<User>();
+    const [tokenMemory, setTokenMemory] = useState<string>();
 
     const handleSignIn = (payload: SignIn) => {
         dispatch({ type: 'SIGN_IN', payload });
@@ -60,11 +61,15 @@ export const useAuthentication = () => {
 
     const getToken = async () => {
         const tokenMemory = await getSecureData({ key: 'token' });
-        return tokenMemory;
+        setTokenMemory(tokenMemory);
     }
 
     useEffect(() => {
         getUserMemory();
+    }, []);
+
+    useEffect(() => {
+        getToken();
     }, []);
 
     // const handleSignUp = (payload: SignUp) => {
@@ -74,9 +79,10 @@ export const useAuthentication = () => {
     return {
         handleSignIn,
         handleSignOut,
-        // handleSignUp,
-        userMemory,
         user,
         token,
+        userMemory,
+        tokenMemory,
+        // handleSignUp,
     };
 }

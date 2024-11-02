@@ -4,7 +4,7 @@ import { ViewContainer } from '@/components/ViewContainer/ViewContainer';
 import { InputDynamic } from '@/components/Inputs/InputDynamic';
 import { ButtonDynamic } from '@/components/Buttons/ButtonDynamic';
 import { useGlobalContext } from '@/context/GlobalContext';
-import { useNavigation } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 
 export default function SignIn() {
     const { handleSignIn } = useGlobalContext();
@@ -14,7 +14,7 @@ export default function SignIn() {
 
     const handleLogin = () => {
         if (username === 'jeanfes' && password === '123456') {
-            const userData = { id: '1', name: 'Jean', username: username, password: password, token: 'mi-token', email: 'jeanescobar7@hotmail.com' };
+            const userData = { id: '1', name: 'Jean', username: username, password: password, token: 'mi-token', email: 'jeanescobar7@hotmail.com', image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN6h7AAVpPXDIgzVngWkxS9mcE0tOesmIStA&s" };
             handleSignIn(userData);
         } else {
             alert('Login failed');

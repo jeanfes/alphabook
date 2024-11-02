@@ -4,6 +4,7 @@ export interface User {
     username: string;
     name: string;
     email: string;
+    image: string;
     token?: string;
 }
 
@@ -13,6 +14,7 @@ export interface SignIn {
     password: string;
     name: string;
     email: string;
+    image: string;
     token: string;
 }
 

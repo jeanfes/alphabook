@@ -1,17 +1,49 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { StyleSheet, Text, View, Modal, TouchableOpacity, Dimensions, Pressable, Animated, Easing, ScrollView } from 'react-native';
-import * as DocumentPicker from 'expo-document-picker';
+import { StyleSheet, Text, View, Modal, TouchableOpacity, Dimensions, Pressable, Animated, Easing, ScrollView, Image, StatusBar, TouchableHighlight } from 'react-native';
+import { IconClock, IconHelp, IconMiniArrowRight, IconProfile, IconSettings } from '@/assets/icons/IconsMenu';
+import { useGlobalContext } from '@/context/GlobalContext';
+import { tabNavigationRef } from '@/app/(tabs)/navigation';
+import { shortText } from '@/utilities/formatters';
 
 interface MenuBarProps {
     menuVisible: boolean;
     setMenuVisible: (visible: boolean) => void;
 }
 
+interface ButtonMenuProps {
+    onPress: () => void;
+    icon: JSX.Element;
+    text: string;
+}
+
 const { width } = Dimensions.get('window');
+
+const ButtonMenu = ({ onPress, icon, text }: ButtonMenuProps) => {
+    return (
+        <Pressable onPress={onPress} style={({ pressed }) => {
+            return [
+                {
+                    backgroundColor: pressed
+                        ? '#faebeb'
+                        : 'white'
+                },
+                styles.menuItem
+            ]
+        }}>
+            {icon}
+            <Text style={styles.menuItemText}>{text}</Text>
+        </Pressable>
+    )
+}
 
 export const MenuBar = ({ menuVisible = false, setMenuVisible }: MenuBarProps) => {
     const [visible, setVisible] = useState(menuVisible);
+    const { user, userMemory } = useGlobalContext();
     const slideAnim = useRef(new Animated.Value(-width)).current;
+
+    const toggleMenu = () => {
+        setMenuVisible(!menuVisible);
+    };
 
     useEffect(() => {
         if (menuVisible) {
@@ -32,38 +64,72 @@ export const MenuBar = ({ menuVisible = false, setMenuVisible }: MenuBarProps) =
         }
     }, [menuVisible]);
 
-    const toggleMenu = () => {
-        setMenuVisible(!menuVisible);
-    };
-
-    const handleFileUpload = async () => {
-        try {
-            const res = await DocumentPicker.getDocumentAsync({
-                type: 'application/pdf',
-                copyToCacheDirectory: true,
-                multiple: false,
-            });
-            if (res) {
-                if (res.canceled === false) {
-                    alert(`File uploaded: ${res.assets[0].name}`);
-                } else {
-                    alert('File upload cancelled');
-                }
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
     return (
-        <Modal transparent={true} visible={visible} animationType="none" onRequestClose={toggleMenu}>
+        <Modal transparent={true} visible={visible} animationType='none' onRequestClose={toggleMenu}>
+            <StatusBar backgroundColor='#EB5757' barStyle='light-content' />
             <View style={styles.overlay}>
                 <TouchableOpacity style={styles.overlayTouchable} onPress={toggleMenu} />
                 <Animated.View style={[styles.menu, { transform: [{ translateX: slideAnim }] }]}>
-                    <ScrollView>
-                        <Pressable onPress={handleFileUpload} style={styles.menuItem}>
-                            <Text>Upload File</Text>
-                        </Pressable>
+                    <ScrollView style={{
+                        height: '100%',
+                        width: '100%',
+                    }}>
+                        <View style={styles.containerProfile}>
+                            {userMemory?.image ? <Image
+                                source={{
+                                    uri: user?.image || userMemory?.image
+                                }}
+                                style={styles.profileImage}
+                            />
+                                : <View style={{
+                                    width: 55,
+                                    height: 55,
+                                    borderRadius: 180,
+                                    backgroundColor: '#FFFFFF',
+                                    justifyContent: 'center',
+                                    borderWidth: 2,
+                                    borderColor: '#FFFFFF',
+                                    alignItems: 'center'
+                                }}>
+                                    <IconProfile width={40} height={40} color='#EB5757' />
+                                </View>
+                            }
+                            <View style={styles.containerProfileText}>
+                                <Text style={{ color: '#FFFFFF', fontFamily: 'OpenSansSemiBold', fontSize: 21 }}>
+                                    {shortText(user?.name, 15) || shortText(userMemory?.name, 15) || 'User'}
+                                </Text>
+                                <Pressable style={styles.profileButton}
+                                    onPress={() => {
+                                        if (tabNavigationRef.isReady()) {
+                                            tabNavigationRef.navigate('Profile');
+                                        }
+                                    }}>
+                                    <Text style={{ color: '#FFFFFF', fontFamily: 'OpenSansRegular', fontSize: 15, marginBottom: 2 }}>
+                                        Mi perfil
+                                    </Text>
+                                    <IconMiniArrowRight width={10} height={12} color='#FFFFFF' />
+                                </Pressable>
+                            </View>
+                        </View>
+                        <View style={styles.containerMenuItems}>
+                            <ButtonMenu onPress={() => { }} icon={<IconClock />} text='History' />
+                            <ButtonMenu onPress={() => { }} icon={<IconSettings />} text='Settings' />
+                            <ButtonMenu onPress={() => { }} icon={<IconHelp />} text='Help' />
+                        </View>
+                        <View style={styles.aboutContainer}>
+                            <Pressable style={({ pressed }) => {
+                                return [
+                                    {
+                                        backgroundColor: pressed
+                                            ? '#faebeb'
+                                            : '#FFFFFF',
+                                    },
+                                    styles.menuItem
+                                ]
+                            }}>
+                                <Text style={styles.menuItemText}>Acerca de alphabook</Text>
+                            </Pressable>
+                        </View>
                     </ScrollView>
                 </Animated.View>
             </View>
@@ -91,12 +157,55 @@ const styles = StyleSheet.create({
     menu: {
         width: '70%',
         height: '100%',
-        backgroundColor: 'white',
-        padding: 16,
+        backgroundColor: '#FFFFFF',
+        paddingBottom: 15,
         position: 'absolute',
         left: 0,
     },
-    menuItem: {
-        padding: 8,
+    containerProfile: {
+        backgroundColor: '#EB5757',
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 15,
+        paddingTop: 24,
+        paddingLeft: 14,
+        paddingBottom: 24,
     },
+    profileImage: {
+        width: 55,
+        height: 55,
+        borderRadius: 50,
+    },
+    containerProfileText: {
+        flexDirection: 'column',
+        gap: 1,
+    },
+    profileButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 5,
+    },
+    containerMenuItems: {
+        flexDirection: 'column',
+    },
+    menuItem: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 15,
+        paddingLeft: 20,
+        gap: 20,
+    },
+    menuItemText: {
+        color: '#4f4f4f',
+        fontSize: 14,
+        fontFamily: 'OpenSansSemiBold',
+    },
+    aboutContainer: {
+        marginTop: 8,
+        borderTopWidth: 0.8,
+        borderColor: '#E0E0E0',
+        paddingTop: 8,
+        paddingBottom: 8,
+    }
 });

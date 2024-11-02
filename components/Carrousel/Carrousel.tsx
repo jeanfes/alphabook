@@ -1,5 +1,5 @@
-import { useEffect, useId, useState } from 'react';
-import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native';
+import { useId } from 'react';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 
 interface CarrouselProps {
     data: any;
@@ -18,8 +18,8 @@ export const Carrousel = ({ data, renderItem, horizontal = true }: CarrouselProp
             contentContainerStyle={
                 horizontal
                     ? {
-                          flexGrow: 1,
-                      }
+                        flexGrow: 1,
+                    }
                     : styles.container
             }
             numColumns={numColumns}

@@ -7,7 +7,7 @@ import { Book, Library } from '@/interfaces/library';
 import { Link, NavigationContainer } from '@react-navigation/native';
 import { useNavigation } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ReadBook } from '@/pages/ReadBook';
 import { IconArrowLeft } from '@/assets/icons/IconsHeader';
@@ -59,6 +59,7 @@ const Favorites = () => {
 
     return (
         <SafeAreaView style={stylesFavorites.mainContainer}>
+            <StatusBar backgroundColor={"#FFFFFF"} barStyle='light-content' />
             <View style={stylesFavorites.titlePage}>
                 <Text style={stylesFavorites.titlePageText}>Favorites</Text>
             </View>

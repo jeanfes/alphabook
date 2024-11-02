@@ -2,11 +2,11 @@ import { Carrousel } from '@/components/Carrousel/Carrousel';
 import { Header } from '@/components/Header/Header';
 import { SearchBar } from '@/components/SearchBar/SearchBar';
 import { useGlobalContext } from '@/context/GlobalContext';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Pressable, ScrollView, StyleSheet, Text, View, Platform } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View, Platform, Button, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 import { Link, NavigationContainer } from '@react-navigation/native';
 import { CategoryItem } from '@/components/Library/CategoryItem';
 import { BookItem } from '@/components/Library/BookItem';
@@ -17,6 +17,7 @@ import { IconSaved } from '@/assets/icons/IconsTabLayout';
 import { Book } from '@/interfaces/library';
 import { useBook } from '@/hooks/books/useBook';
 import { dataCategories } from '@/utilities/data';
+import { shortText } from '@/utilities/formatters';
 
 const Stack = createNativeStackNavigator();
 
@@ -71,7 +72,7 @@ const Index = () => {
             <ScrollView>
                 <View style={stylesIndex.container}>
                     <View style={stylesIndex.greetingsContainer}>
-                        <Text style={stylesIndex.greetingsText}>Hello, {user?.name || userMemory?.name || 'User'}</Text>
+                        <Text style={stylesIndex.greetingsText}>Hello, {shortText(user?.name, 15) || shortText(userMemory?.name, 15) || 'User'}</Text>
                         <Text style={stylesIndex.subtitleGreetingsText}>What do you want to read today?</Text>
                     </View>
                     <View style={stylesIndex.homeContainer}>
@@ -197,9 +198,9 @@ const stylesIndex = StyleSheet.create({
     container: {
         flex: 1,
         gap: 25,
-        paddingTop: 4,
+        paddingTop: 0,
         paddingLeft: 18,
-        backgroundColor: '#fff',
+        backgroundColor: '#FFFFFF',
     },
     greetingsContainer: {
         gap: 8,

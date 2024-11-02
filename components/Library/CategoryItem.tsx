@@ -27,7 +27,7 @@ export const CategoryItem = ({ category, selected, onPress }: CategoryItemProps)
                 style={{
                     fontSize: 18,
                     fontFamily: 'OpenSansRegular',
-                    color: selected ? '#000000' : '#9D9D9D',
+                    color: selected ? '#4f4f4f' : '#9D9D9D',
                 }}
             >
                 {category?.text}

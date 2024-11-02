@@ -1,8 +1,8 @@
 import { IconMenu, IconNotification } from '@/assets/icons/IconsHeader';
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import {  Pressable, StyleSheet, View } from 'react-native';
 import { MenuBar } from '../MenuBar/MenuBar';
+import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
-import { useNavigation } from 'expo-router';
 
 export const Header = () => {
     const [menuVisible, setMenuVisible] = useState(false);
@@ -21,7 +21,7 @@ export const Header = () => {
             >
                 <IconMenu />
             </Pressable>
-            <View style={styles.containerImage}>
+            <View style={styles.notificationContainer}>
                 <Pressable
                     onPress={() => navigation.navigate('notifications')}
                     style={({ pressed }) => [
@@ -33,12 +33,6 @@ export const Header = () => {
                 >
                     <IconNotification />
                 </Pressable>
-                <Image
-                    source={{
-                        uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN6h7AAVpPXDIgzVngWkxS9mcE0tOesmIStA&s',
-                    }}
-                    style={styles.headerImage}
-                />
             </View>
             <MenuBar menuVisible={menuVisible} setMenuVisible={setMenuVisible} />
         </View>
@@ -49,22 +43,18 @@ const styles = StyleSheet.create({
     header: {
         backgroundColor: '#FFFFFF',
         padding: 18,
-        paddingLeft: 8,
+        paddingLeft: 9,
+        paddingRight: 9,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    containerImage: {
+    notificationContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 50,
         gap: 18,
-    },
-    headerImage: {
-        width: 45,
-        height: 45,
-        borderRadius: 50,
     },
     menuContainer: {
         width: 45,
