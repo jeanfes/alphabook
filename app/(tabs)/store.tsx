@@ -1,10 +1,11 @@
 import { ViewContainer } from '@/components/ViewContainer/ViewContainer';
-import { Text } from 'react-native';
+import React from 'react';
+import { View, Text } from 'react-native';
 
-export default function Store() {
+export default function StackStore() {
     return (
         <ViewContainer>
-            <Text>Store</Text>
+            <Text>Stack Store Screen</Text>
         </ViewContainer>
     );
 }

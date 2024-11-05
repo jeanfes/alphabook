@@ -7,6 +7,7 @@ import Profile from './profile';
 import StackFavorites from './favorites';
 import StackHome from './home';
 import Alpha from './alpha';
+import StackStore from './store';
 
 const Tab = createBottomTabNavigator();
 
@@ -91,8 +92,8 @@ export default function Main() {
                     }}
                 />
                 {/* <Tab.Screen
-                    name="Store"
-                    component={Store}
+                    name="StackStore"
+                    component={StackStore}
                     options={{
                         title: 'Store',
                         tabBarLabel: ({ focused }) => <AnimatedLabel focused={focused} title="Store" />,

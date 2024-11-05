@@ -54,6 +54,7 @@ export const ModalConfirmation = ({ modalParams, modalTexts, onConfirm, onCancel
                                 onPress={onCancel}
                                 style={({ pressed }) => [
                                     {
+                                        width: '48%',
                                         backgroundColor: pressed ? '#E0E0E0' : '#FFFFFF',
                                         borderWidth: 1,
                                         borderColor: '#EB5757',
@@ -71,7 +72,7 @@ export const ModalConfirmation = ({ modalParams, modalTexts, onConfirm, onCancel
                             onPress={onConfirm}
                             style={({ pressed }) => [
                                 {
-                                    width: modalTexts?.textCancel ? 'auto' : '100%',
+                                    width: modalTexts?.textCancel ? '48%' : '100%',
                                     backgroundColor: pressed ? '#D32F2F' : '#EB5757',
                                     borderWidth: 1,
                                     borderColor: '#EB5757',

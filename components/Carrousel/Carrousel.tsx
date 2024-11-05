@@ -18,8 +18,8 @@ export const Carrousel = ({ data, renderItem, horizontal = true }: CarrouselProp
             contentContainerStyle={
                 horizontal
                     ? {
-                        flexGrow: 1,
-                    }
+                          flexGrow: 1,
+                      }
                     : styles.container
             }
             numColumns={numColumns}

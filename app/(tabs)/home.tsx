@@ -7,7 +7,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Pressable, ScrollView, StyleSheet, Text, View, Platform, Button, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { Link } from '@react-navigation/native';
 import { CategoryItem } from '@/components/Library/CategoryItem';
 import { BookItem } from '@/components/Library/BookItem';
 import { ReadBook } from '@/pages/ReadBook';
@@ -69,7 +68,7 @@ const Home = () => {
             }}
         >
             <Header />
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false} bounces={false} overScrollMode="never">
                 <View style={stylesIndex.container}>
                     <View style={stylesIndex.greetingsContainer}>
                         <Text style={stylesIndex.greetingsText}>Hello, {shortText(user?.name, 15) || shortText(userMemory?.name, 15) || 'User'}</Text>
