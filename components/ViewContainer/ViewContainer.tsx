@@ -10,12 +10,12 @@ interface ViewContainerProps {
 export const ViewContainer = ({ children, style }: ViewContainerProps) => {
     return (
         <SafeAreaView style={[styles.viewContainer, style]}>
-            <ScrollView contentContainerStyle={styles.scrollView}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollView}>
                 {children}
             </ScrollView>
         </SafeAreaView>
     );
-}
+};
 
 const styles = StyleSheet.create({
     viewContainer: {

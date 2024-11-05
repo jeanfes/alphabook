@@ -6,9 +6,10 @@ interface ButtonDynamicProps {
     onPress: () => void;
     design?: number;
     disabled?: boolean;
+    styles?: any;
 }
 
-export const ButtonDynamic = ({ title, onPress, design = 1, disabled }: ButtonDynamicProps) => {
+export const ButtonDynamic = ({ title, onPress, design = 1, disabled = false, styles }: ButtonDynamicProps) => {
     const [loaded] = useFonts({
         OpenSansRegular: require('../../assets/fonts/OpenSans-Regular.ttf'),
         OpenSansBold: require('../../assets/fonts/OpenSans-Bold.ttf'),
@@ -24,14 +25,26 @@ export const ButtonDynamic = ({ title, onPress, design = 1, disabled }: ButtonDy
             return pressed ? styles1.buttonPressed : styles1.button;
         } else if (design === 2) {
             return pressed ? styles2.buttonPressed : styles2.button;
-        } else {
+        } else if (design === 3) {
             return pressed ? styles3.buttonPressed : styles3.button;
+        } else if (design === 4) {
+            return pressed ? styles4.buttonPressed : styles4.button;
         }
     };
 
     return (
-        <Pressable onPress={onPress} style={({ pressed }) => [getButtonStyle(pressed), disabled && { opacity: 0.8 }]} disabled={disabled}>
-            <Text style={design === 1 ? styles1.text : design === 2 ? styles2.text : styles3.text}>{title}</Text>
+        <Pressable
+            onPress={onPress}
+            style={({ pressed }) => [
+                {
+                    ...styles,
+                },
+                getButtonStyle(pressed),
+                disabled && { opacity: 0.8 },
+            ]}
+            disabled={disabled}
+        >
+            <Text style={design === 1 ? styles1.text : design === 2 ? styles2.text : design === 3 ? styles3.text : styles4.text}>{title}</Text>
         </Pressable>
     );
 };
@@ -109,6 +122,32 @@ const styles3 = StyleSheet.create({
     },
     text: {
         color: '#FFFFFF',
+        fontFamily: 'OpenSansRegular',
+        fontSize: 18,
+    },
+});
+
+const styles4 = StyleSheet.create({
+    button: {
+        backgroundColor: '#FFFFFF',
+        borderWidth: 1.5,
+        borderColor: '#EB5757',
+        padding: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+    },
+    buttonPressed: {
+        backgroundColor: '#E0E0E0',
+        borderWidth: 1.5,
+        borderColor: '#EB5757',
+        padding: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
+    },
+    text: {
+        color: '#EB5757',
         fontFamily: 'OpenSansRegular',
         fontSize: 18,
     },

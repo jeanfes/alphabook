@@ -10,7 +10,7 @@ import { useGlobalContext } from '@/context/GlobalContext';
 
 export default function SignUp() {
     const navigation = useNavigation();
-    const { handleSignIn, user } = useGlobalContext();
+    const { handleSignIn } = useGlobalContext();
 
     const initialValues = {
         name: '',
@@ -49,6 +49,7 @@ export default function SignUp() {
                 username: values.username,
                 password: values.password,
                 token: 'mi-token',
+                image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSN6h7AAVpPXDIgzVngWkxS9mcE0tOesmIStA&s',
             });
         },
         validateOnChange: true,

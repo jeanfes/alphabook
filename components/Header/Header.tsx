@@ -23,7 +23,7 @@ export const Header = () => {
             </Pressable>
             <View style={styles.notificationContainer}>
                 <Pressable
-                    onPress={() => navigation.navigate('notifications')}
+                    onPress={() => navigation.navigate('Notifications')}
                     style={({ pressed }) => [
                         styles.menuContainer,
                         {

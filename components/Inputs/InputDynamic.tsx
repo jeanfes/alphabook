@@ -2,7 +2,7 @@ import { Pressable, TextInput, View } from 'react-native';
 import { IconEye } from '@/assets/icons/IconsForms';
 import { IconCheck } from '@/assets/icons/IconsForms';
 import { IconNoCheck } from '@/assets/icons/IconsForms';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface InputDynamicProps {
     placeholder: string;
@@ -11,11 +11,13 @@ interface InputDynamicProps {
     onBlur?: any;
     secureTextEntry?: boolean;
     check?: boolean | null;
+    autoFocus?: boolean;
     id?: string;
 }
 
-export const InputDynamic = ({ placeholder, value, onChange, onBlur, secureTextEntry = false, check = false, id }: InputDynamicProps) => {
+export const InputDynamic = ({ placeholder, value, onChange, onBlur, secureTextEntry = false, check = false, id, autoFocus }: InputDynamicProps) => {
     const [isTextVisible, setIsTextVisible] = useState(!secureTextEntry);
+    const inputRef = useRef<TextInput>(null);
     const toggleTextVisibility = () => {
         setIsTextVisible((prevState) => !prevState);
     };
@@ -23,6 +25,14 @@ export const InputDynamic = ({ placeholder, value, onChange, onBlur, secureTextE
     useEffect(() => {
         setIsTextVisible(!secureTextEntry);
     }, [secureTextEntry]);
+
+    useEffect(() => {
+        if (autoFocus) {
+            if (inputRef.current) {
+                inputRef.current.focus();
+            }
+        }
+    }, [autoFocus]);
 
     return (
         <View
@@ -32,6 +42,7 @@ export const InputDynamic = ({ placeholder, value, onChange, onBlur, secureTextE
             }}
         >
             <TextInput
+                ref={inputRef}
                 style={styles.input}
                 placeholder={placeholder}
                 value={value}

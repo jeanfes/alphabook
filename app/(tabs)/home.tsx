@@ -7,7 +7,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Pressable, ScrollView, StyleSheet, Text, View, Platform, Button, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { Link, NavigationContainer } from '@react-navigation/native';
+import { Link } from '@react-navigation/native';
 import { CategoryItem } from '@/components/Library/CategoryItem';
 import { BookItem } from '@/components/Library/BookItem';
 import { ReadBook } from '@/pages/ReadBook';
@@ -21,7 +21,7 @@ import { shortText } from '@/utilities/formatters';
 
 const Stack = createNativeStackNavigator();
 
-const Index = () => {
+const Home = () => {
     const { user, userMemory } = useGlobalContext();
     const { books } = useBook();
     const [searchBook, setSearchBook] = useState<string>('');
@@ -84,7 +84,7 @@ const Index = () => {
                             renderItem={({ item }) => <CategoryItem onPress={() => handleSelectCategory(item)} category={item} selected={selectedCategory === item?.id} />}
                         />
                     )}
-                    <Carrousel data={selectedBooks} renderItem={({ item }) => <BookItem book={item} onPress={() => navigation.navigate('readbook', { book: item })} />} />
+                    <Carrousel data={selectedBooks} renderItem={({ item }) => <BookItem book={item} onPress={() => navigation.navigate('HomeReadBook', { book: item })} />} />
                     <View style={stylesIndex.recommended}>
                         <Text style={stylesIndex.textRecommended}>Recommended for you</Text>
                         <Carrousel data={books} renderItem={({ item }) => <BookItem book={item} />} />
@@ -95,18 +95,9 @@ const Index = () => {
     );
 };
 
-const linking = {
-    prefixes: ['https://alphabook.com', 'alphabook://'],
-    config: {
-        screens: {
-            index: 'index',
-            readbook: 'readbook/:id',
-        },
-    },
-};
-
-export default function StackIndex() {
+export default function StackHome() {
     const { saveBook, books } = useBook();
+    const navigation = useNavigation<any>();
 
     const handleFavoriteBook = (book: Book) => {
         saveBook({ ...book, favorite: !book.favorite });
@@ -119,78 +110,86 @@ export default function StackIndex() {
     };
 
     return (
-        <NavigationContainer independent linking={linking}>
-            <Stack.Navigator initialRouteName="Index">
-                <Stack.Screen
-                    options={{
-                        gestureDirection: 'horizontal',
-                        customAnimationOnGesture: true,
-                        headerShown: false,
-                    }}
-                    name="index"
-                    component={Index}
-                />
-                <Stack.Screen
-                    name="readbook"
-                    component={ReadBook}
-                    options={({ route }: any) => ({
-                        headerTitle: '',
-                        headerShadowVisible: false,
-                        headerTitleStyle: {
-                            color: '#000',
-                            fontFamily: 'OpenSansBold',
-                            fontSize: 20,
-                        },
-                        headerLeft: () => (
-                            <Link to={'/index'} style={{ paddingRight: 30 }}>
-                                <IconArrowLeft />
-                            </Link>
-                        ),
-                        headerRight: () => {
-                            const [isFavorite, setIsFavorite] = useState<boolean | undefined>(false);
-                            useEffect(() => {
-                                const checkFavorite = async () => {
-                                    const favorite = await getColorFavorite(route?.params?.book);
-                                    setIsFavorite(favorite);
-                                };
-                                checkFavorite();
-                            }, [route?.params?.book]);
-                            return (
-                                <Pressable
-                                    onPress={() => {
-                                        handleFavoriteBook(route?.params?.book);
-                                        setIsFavorite(!isFavorite);
-                                    }}
-                                >
-                                    <IconSaved color={isFavorite ? '#EB5757' : '#fff'} />
-                                </Pressable>
-                            );
-                        },
-                    })}
-                />
-                <Stack.Screen
-                    name="notifications"
-                    component={Notifications}
-                    options={{
-                        headerTitle: 'Notifications',
-                        animation: Platform.select({
-                            ios: 'simple_push',
-                            android: 'slide_from_right',
-                        }),
-                        headerTitleStyle: {
-                            color: '#000',
-                            fontFamily: 'OpenSansSemiBold',
-                            fontSize: 20,
-                        },
-                        headerLeft: () => (
-                            <Link to={'/index'} style={{ padding: 8, paddingRight: 24 }}>
-                                <IconArrowLeft />
-                            </Link>
-                        ),
-                    }}
-                />
-            </Stack.Navigator>
-        </NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen
+                options={{
+                    gestureDirection: 'horizontal',
+                    customAnimationOnGesture: true,
+                    headerShown: false,
+                }}
+                name="Home"
+                component={Home}
+            />
+            <Stack.Screen
+                name="HomeReadBook"
+                component={ReadBook}
+                options={({ route }: any) => ({
+                    headerTitle: '',
+                    headerShadowVisible: false,
+                    headerTitleStyle: {
+                        color: '#000',
+                        fontFamily: 'OpenSansBold',
+                        fontSize: 20,
+                    },
+                    headerLeft: () => (
+                        <Pressable
+                            onPress={() => {
+                                navigation.navigate('Home');
+                            }}
+                            style={{ padding: 20, paddingLeft: 0 }}
+                        >
+                            <IconArrowLeft />
+                        </Pressable>
+                    ),
+                    headerRight: () => {
+                        const [isFavorite, setIsFavorite] = useState<boolean | undefined>(false);
+                        useEffect(() => {
+                            const checkFavorite = async () => {
+                                const favorite = await getColorFavorite(route?.params?.book);
+                                setIsFavorite(favorite);
+                            };
+                            checkFavorite();
+                        }, [route?.params?.book]);
+                        return (
+                            <Pressable
+                                onPress={() => {
+                                    handleFavoriteBook(route?.params?.book);
+                                    setIsFavorite(!isFavorite);
+                                }}
+                            >
+                                <IconSaved color={isFavorite ? '#EB5757' : '#fff'} />
+                            </Pressable>
+                        );
+                    },
+                })}
+            />
+            <Stack.Screen
+                name="Notifications"
+                component={Notifications}
+                options={{
+                    headerTitle: 'Notifications',
+                    animation: Platform.select({
+                        ios: 'simple_push',
+                        android: 'slide_from_right',
+                    }),
+                    headerTitleStyle: {
+                        color: '#000',
+                        fontFamily: 'OpenSansSemiBold',
+                        fontSize: 20,
+                    },
+                    headerLeft: () => (
+                        <Pressable
+                            onPress={() => {
+                                navigation.goBack();
+                            }}
+                            style={{ padding: 20, paddingLeft: 0 }}
+                        >
+                            <IconArrowLeft />
+                        </Pressable>
+                    ),
+                }}
+            />
+        </Stack.Navigator>
     );
 }
 

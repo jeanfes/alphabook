@@ -1,13 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { NavigationContainer } from '@react-navigation/native';
 import { Text, Animated, StyleSheet, StatusBar } from 'react-native';
 import { IconAlpha, IconHome, IconProfile, IconSaved, IconStore } from '../../assets/icons/IconsTabLayout';
 import { useFonts } from 'expo-font';
 import Profile from './profile';
-import StackIndex from './index';
 import StackFavorites from './favorites';
-import { tabNavigationRef } from './navigation';
+import StackHome from './home';
 import Alpha from './alpha';
 
 const Tab = createBottomTabNavigator();
@@ -38,7 +36,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export default function TabLayout() {
+export default function Main() {
     const [loaded] = useFonts({
         OpenSansLight: require('../../assets/fonts/OpenSans-Light.ttf'),
         OpenSansRegular: require('../../assets/fonts/OpenSans-Regular.ttf'),
@@ -52,9 +50,10 @@ export default function TabLayout() {
     }
 
     return (
-        <NavigationContainer independent ref={tabNavigationRef}>
-            <StatusBar backgroundColor={"#FFFFFF"} barStyle='light-content' />
+        <>
+            <StatusBar backgroundColor={'#FFFFFF'} barStyle="light-content" />
             <Tab.Navigator
+                initialRouteName="Home"
                 screenOptions={{
                     headerShown: false,
                     tabBarStyle: {
@@ -65,8 +64,8 @@ export default function TabLayout() {
                 }}
             >
                 <Tab.Screen
-                    name="Home"
-                    component={StackIndex}
+                    name="StackHome"
+                    component={StackHome}
                     options={{
                         title: 'Home',
                         tabBarLabel: ({ focused }) => <AnimatedLabel focused={focused} title="Home" />,
@@ -74,7 +73,7 @@ export default function TabLayout() {
                     }}
                 />
                 <Tab.Screen
-                    name="Favorites"
+                    name="StackFavorites"
                     component={StackFavorites}
                     options={{
                         title: 'Favorites',
@@ -110,6 +109,6 @@ export default function TabLayout() {
                     }}
                 />
             </Tab.Navigator>
-        </NavigationContainer>
+        </>
     );
 }

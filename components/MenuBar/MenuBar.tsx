@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { StyleSheet, Text, View, Modal, TouchableOpacity, Dimensions, Pressable, Animated, Easing, ScrollView, Image, StatusBar, TouchableHighlight } from 'react-native';
 import { IconClock, IconHelp, IconMiniArrowRight, IconProfile, IconSettings } from '@/assets/icons/IconsMenu';
 import { useGlobalContext } from '@/context/GlobalContext';
-import { tabNavigationRef } from '@/app/(tabs)/navigation';
 import { shortText } from '@/utilities/formatters';
+import { useNavigation } from '@react-navigation/native';
 
 interface MenuBarProps {
     menuVisible: boolean;
@@ -20,26 +20,28 @@ const { width } = Dimensions.get('window');
 
 const ButtonMenu = ({ onPress, icon, text }: ButtonMenuProps) => {
     return (
-        <Pressable onPress={onPress} style={({ pressed }) => {
-            return [
-                {
-                    backgroundColor: pressed
-                        ? '#faebeb'
-                        : 'white'
-                },
-                styles.menuItem
-            ]
-        }}>
+        <Pressable
+            onPress={onPress}
+            style={({ pressed }) => {
+                return [
+                    {
+                        backgroundColor: pressed ? '#faebeb' : 'white',
+                    },
+                    styles.menuItem,
+                ];
+            }}
+        >
             {icon}
             <Text style={styles.menuItemText}>{text}</Text>
         </Pressable>
-    )
-}
+    );
+};
 
 export const MenuBar = ({ menuVisible = false, setMenuVisible }: MenuBarProps) => {
+    const slideAnim = useRef(new Animated.Value(-width)).current;
     const [visible, setVisible] = useState(menuVisible);
     const { user, userMemory } = useGlobalContext();
-    const slideAnim = useRef(new Animated.Value(-width)).current;
+    const navigation = useNavigation<any>();
 
     const toggleMenu = () => {
         setMenuVisible(!menuVisible);
@@ -65,68 +67,73 @@ export const MenuBar = ({ menuVisible = false, setMenuVisible }: MenuBarProps) =
     }, [menuVisible]);
 
     return (
-        <Modal transparent={true} visible={visible} animationType='none' onRequestClose={toggleMenu}>
-            <StatusBar backgroundColor='#EB5757' barStyle='light-content' />
+        <Modal transparent={true} visible={visible} animationType="none" onRequestClose={toggleMenu}>
+            <StatusBar backgroundColor="#EB5757" barStyle="light-content" />
             <View style={styles.overlay}>
                 <TouchableOpacity style={styles.overlayTouchable} onPress={toggleMenu} />
                 <Animated.View style={[styles.menu, { transform: [{ translateX: slideAnim }] }]}>
-                    <ScrollView style={{
-                        height: '100%',
-                        width: '100%',
-                    }}>
+                    <ScrollView
+                        style={{
+                            height: '100%',
+                            width: '100%',
+                        }}
+                    >
                         <View style={styles.containerProfile}>
-                            {userMemory?.image ? <Image
-                                source={{
-                                    uri: user?.image || userMemory?.image
-                                }}
-                                style={styles.profileImage}
-                            />
-                                : <View style={{
-                                    width: 55,
-                                    height: 55,
-                                    borderRadius: 180,
-                                    backgroundColor: '#FFFFFF',
-                                    justifyContent: 'center',
-                                    borderWidth: 2,
-                                    borderColor: '#FFFFFF',
-                                    alignItems: 'center'
-                                }}>
-                                    <IconProfile width={40} height={40} color='#EB5757' />
+                            {user?.image || userMemory?.image ? (
+                                <Image
+                                    source={{
+                                        uri: user?.image || userMemory?.image,
+                                    }}
+                                    style={styles.profileImage}
+                                />
+                            ) : (
+                                <View
+                                    style={{
+                                        width: 55,
+                                        height: 55,
+                                        borderRadius: 180,
+                                        backgroundColor: '#FFFFFF',
+                                        justifyContent: 'center',
+                                        borderWidth: 2,
+                                        borderColor: '#FFFFFF',
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <IconProfile width={40} height={40} color="#EB5757" />
                                 </View>
-                            }
+                            )}
                             <View style={styles.containerProfileText}>
                                 <Text style={{ color: '#FFFFFF', fontFamily: 'OpenSansSemiBold', fontSize: 21 }}>
                                     {shortText(user?.name, 15) || shortText(userMemory?.name, 15) || 'User'}
                                 </Text>
-                                <Pressable style={styles.profileButton}
+                                <Pressable
+                                    style={styles.profileButton}
                                     onPress={() => {
-                                        if (tabNavigationRef.isReady()) {
-                                            tabNavigationRef.navigate('Profile');
-                                        }
-                                    }}>
-                                    <Text style={{ color: '#FFFFFF', fontFamily: 'OpenSansRegular', fontSize: 15, marginBottom: 2 }}>
-                                        Mi perfil
-                                    </Text>
-                                    <IconMiniArrowRight width={10} height={12} color='#FFFFFF' />
+                                        toggleMenu();
+                                        navigation.navigate('Profile');
+                                    }}
+                                >
+                                    <Text style={{ color: '#FFFFFF', fontFamily: 'OpenSansRegular', fontSize: 15, marginBottom: 2 }}>Mi perfil</Text>
+                                    <IconMiniArrowRight width={10} height={12} color="#FFFFFF" />
                                 </Pressable>
                             </View>
                         </View>
                         <View style={styles.containerMenuItems}>
-                            <ButtonMenu onPress={() => { }} icon={<IconClock />} text='History' />
-                            <ButtonMenu onPress={() => { }} icon={<IconSettings />} text='Settings' />
-                            <ButtonMenu onPress={() => { }} icon={<IconHelp />} text='Help' />
+                            <ButtonMenu onPress={() => {}} icon={<IconClock />} text="History" />
+                            <ButtonMenu onPress={() => {}} icon={<IconSettings />} text="Settings" />
+                            <ButtonMenu onPress={() => {}} icon={<IconHelp />} text="Help" />
                         </View>
                         <View style={styles.aboutContainer}>
-                            <Pressable style={({ pressed }) => {
-                                return [
-                                    {
-                                        backgroundColor: pressed
-                                            ? '#faebeb'
-                                            : '#FFFFFF',
-                                    },
-                                    styles.menuItem
-                                ]
-                            }}>
+                            <Pressable
+                                style={({ pressed }) => {
+                                    return [
+                                        {
+                                            backgroundColor: pressed ? '#faebeb' : '#FFFFFF',
+                                        },
+                                        styles.menuItem,
+                                    ];
+                                }}
+                            >
                                 <Text style={styles.menuItemText}>Acerca de alphabook</Text>
                             </Pressable>
                         </View>
@@ -207,5 +214,5 @@ const styles = StyleSheet.create({
         borderColor: '#E0E0E0',
         paddingTop: 8,
         paddingBottom: 8,
-    }
+    },
 });

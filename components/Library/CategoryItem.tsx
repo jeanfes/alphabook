@@ -1,4 +1,5 @@
-import { Pressable, Text } from "react-native";
+import { memo } from 'react';
+import { Pressable, Text } from 'react-native';
 
 interface CategoryItemProps {
     onPress: (category: any) => void;
@@ -9,9 +10,7 @@ interface CategoryItemProps {
     selected: boolean;
 }
 
-
-export const CategoryItem = ({ category, selected, onPress }: CategoryItemProps) => {
-
+export const CategoryItem = memo(({ category, selected, onPress }: CategoryItemProps) => {
     return (
         <Pressable
             onPress={onPress}
@@ -34,4 +33,4 @@ export const CategoryItem = ({ category, selected, onPress }: CategoryItemProps)
             </Text>
         </Pressable>
     );
-};
+});

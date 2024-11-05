@@ -1,5 +1,5 @@
 import { shortText } from '@/utilities/formatters';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { Dimensions, Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 interface BookItemProps {
@@ -11,7 +11,7 @@ interface BookItemProps {
     onPress?: () => void;
 }
 
-export const BookItem = ({ book, onPress }: BookItemProps) => {
+export const BookItem = memo(({ book, onPress }: BookItemProps) => {
     const numColumns = 2;
     const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
 
@@ -35,7 +35,7 @@ export const BookItem = ({ book, onPress }: BookItemProps) => {
             </View>
         </Pressable>
     );
-};
+});
 
 const stylesBookItem = StyleSheet.create({
     textContainer: {

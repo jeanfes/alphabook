@@ -4,7 +4,6 @@ import { CategoryItem } from '@/components/Library/CategoryItem';
 import { SearchBar } from '@/components/SearchBar/SearchBar';
 import { useLibrary } from '@/hooks/books/useLibrary';
 import { Book, Library } from '@/interfaces/library';
-import { Link, NavigationContainer } from '@react-navigation/native';
 import { useNavigation } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Pressable, StatusBar, StyleSheet, Text, View } from 'react-native';
@@ -59,7 +58,7 @@ const Favorites = () => {
 
     return (
         <SafeAreaView style={stylesFavorites.mainContainer}>
-            <StatusBar backgroundColor={"#FFFFFF"} barStyle='light-content' />
+            <StatusBar backgroundColor={'#FFFFFF'} barStyle="light-content" />
             <View style={stylesFavorites.titlePage}>
                 <Text style={stylesFavorites.titlePageText}>Favorites</Text>
             </View>
@@ -77,7 +76,7 @@ const Favorites = () => {
             <Carrousel
                 horizontal={false}
                 data={selectedBooks}
-                renderItem={({ item }) => <BookItem book={item} onPress={() => navigation.navigate('readbook', { book: item })} />}
+                renderItem={({ item }) => <BookItem book={item} onPress={() => navigation.navigate('FavoritesReadBook', { book: item })} />}
             />
         </SafeAreaView>
     );
@@ -114,6 +113,7 @@ export default function StackFavorites() {
     const { getLibraries } = useLibrary();
     const { saveBook, books: globalBooks } = useBook();
     const [books, setBooks] = useState<Book[]>([]);
+    const navigation = useNavigation<any>();
 
     const handleFavoriteBook = (book: Book) => {
         console.log('book', book);
@@ -134,38 +134,41 @@ export default function StackFavorites() {
     }, [globalBooks]);
 
     return (
-        <NavigationContainer independent>
-            <Stack.Navigator initialRouteName="favorites">
-                <Stack.Screen
-                    options={{
-                        headerShown: false,
-                    }}
-                    name="favorites"
-                    component={Favorites}
-                />
-                <Stack.Screen
-                    name="readbook"
-                    component={ReadBook}
-                    options={({ route }: any) => ({
-                        headerTitle: '',
-                        headerShadowVisible: false,
-                        headerLeft: () => (
-                            <Link to={'/favorites'} style={{ paddingRight: 30 }}>
-                                <IconArrowLeft />
-                            </Link>
-                        ),
-                        headerRight: () => (
-                            <Pressable
-                                onPress={() => {
-                                    handleFavoriteBook(route?.params?.book);
-                                }}
-                            >
-                                <IconSaved color={books.find((item) => item?.id === route?.params?.book?.id)?.favorite ? '#EB5757' : '#fff'} />
-                            </Pressable>
-                        ),
-                    })}
-                />
-            </Stack.Navigator>
-        </NavigationContainer>
+        <Stack.Navigator initialRouteName="Favorites">
+            <Stack.Screen
+                options={{
+                    headerShown: false,
+                }}
+                name="Favorites"
+                component={Favorites}
+            />
+            <Stack.Screen
+                name="FavoritesReadBook"
+                component={ReadBook}
+                options={({ route }: any) => ({
+                    headerTitle: '',
+                    headerShadowVisible: false,
+                    headerLeft: () => (
+                        <Pressable
+                            onPress={() => {
+                                navigation.navigate('Favorites');
+                            }}
+                            style={{ padding: 20, paddingLeft: 0 }}
+                        >
+                            <IconArrowLeft />
+                        </Pressable>
+                    ),
+                    headerRight: () => (
+                        <Pressable
+                            onPress={() => {
+                                handleFavoriteBook(route?.params?.book);
+                            }}
+                        >
+                            <IconSaved color={books.find((item) => item?.id === route?.params?.book?.id)?.favorite ? '#EB5757' : '#fff'} />
+                        </Pressable>
+                    ),
+                })}
+            />
+        </Stack.Navigator>
     );
 }
