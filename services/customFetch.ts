@@ -3,7 +3,7 @@ const url = "http://localhost:3001/api/v1/";
 interface CustomFetchProps {
     endpoint: string;
     method?: string;
-    token: string | null;
+    token?: string | null;
     body?: any;
     formdata?: boolean;
     isLoader?: boolean;

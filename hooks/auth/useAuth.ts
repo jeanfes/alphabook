@@ -32,6 +32,11 @@ const reducerAuthentication = (state: StateAuth, action: ActionAuth): StateAuth 
         //         ...state,
         //         user: action.payload,
         //     };
+        case 'UPDATE_USER':
+            return {
+                ...state,
+                user: action.payload,
+            };
         default:
             return state;
     }
@@ -51,6 +56,10 @@ export const useAuthentication = () => {
     const handleSignOut = () => {
         dispatch({ type: 'SIGN_OUT' });
     };
+
+    const handleUpdateUser = (payload: User) => {
+        dispatch({ type: 'UPDATE_USER', payload });
+    }
 
     const { getSecureData } = useSecureStorage();
 
@@ -79,6 +88,7 @@ export const useAuthentication = () => {
     return {
         handleSignIn,
         handleSignOut,
+        handleUpdateUser,
         user,
         token,
         userMemory,

@@ -5,9 +5,10 @@ import React, { createContext, useContext, ReactNode, FC } from 'react';
 interface AuthContextProps {
     handleSignIn: (payload: SignIn) => void;
     handleSignOut: () => void;
-    userMemory: User | undefined;
+    handleUpdateUser: (payload: User) => void;
+    userMemory: User | null | undefined;
     tokenMemory: string | undefined;
-    user: User | null;
+    user: User | null | undefined;
     token: string;
     // handleSignUp: (payload: User) => void;
 }
@@ -19,10 +20,10 @@ interface GlobalProviderProps {
 }
 
 export const GlobalProvider: FC<GlobalProviderProps> = ({ children }) => {
-    const { handleSignIn, handleSignOut, user, token, userMemory, tokenMemory } = useAuthentication();
+    const { handleSignIn, handleSignOut, handleUpdateUser, user, token, userMemory, tokenMemory } = useAuthentication();
 
     return (
-        <GlobalContext.Provider value={{ handleSignIn, handleSignOut, user, token, userMemory, tokenMemory }}>
+        <GlobalContext.Provider value={{ handleSignIn, handleSignOut, handleUpdateUser, user, token, userMemory, tokenMemory }}>
             {children}
         </GlobalContext.Provider>
     );

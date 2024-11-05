@@ -54,6 +54,7 @@ export default function SignUp() {
         },
         validateOnChange: true,
     });
+    console.log(errors, values);
 
     return (
         <ViewContainer>

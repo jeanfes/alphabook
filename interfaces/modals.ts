@@ -16,5 +16,6 @@ export interface ModalProps {
     onConfirm: () => void;
     onCancel: () => void;
     showButtonCancel?: boolean;
+    disabledSave?: boolean;
     content?: React.ReactNode;
 }

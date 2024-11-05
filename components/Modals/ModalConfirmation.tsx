@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import { Modal, View, Text, TouchableOpacity, StyleSheet, Animated, Easing, Pressable, StatusBar } from 'react-native';
 import { ModalProps } from '@/interfaces/modals';
+import React, { useEffect, useRef } from 'react';
+import { Modal, View, Text, TouchableOpacity, StyleSheet, Animated, Easing, Pressable, StatusBar, TouchableWithoutFeedback } from 'react-native';
 
-export const ModalConfirmation = ({ modalParams, modalTexts, onConfirm, onCancel, content }: ModalProps) => {
+export const ModalConfirmation = ({ modalParams, modalTexts, onConfirm, onCancel, disabledSave = false, content }: ModalProps) => {
     const translateY = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
@@ -36,57 +36,61 @@ export const ModalConfirmation = ({ modalParams, modalTexts, onConfirm, onCancel
                 activeOpacity={1}
                 onPress={onCancel}
             >
-                <Animated.View
-                    style={[
-                        {
-                            width: modalParams.position === 'center' ? 300 : '94%',
-                            transform: modalParams.position === 'center' ? [] : [{ translateY: translateY }],
-                        },
-                        styles.modalContainer,
-                    ]}
-                >
-                    <Text style={styles.modalTitle}>{modalTexts?.title}</Text>
-                    {modalTexts?.message && <Text style={styles.modalMessage}>{modalTexts?.message}</Text>}
-                    {content && <View style={styles.contentModal}>{content}</View>}
-                    <View style={styles.buttonContainer}>
-                        {modalTexts?.textCancel && (
+                <TouchableWithoutFeedback>
+                    <Animated.View
+                        style={[
+                            {
+                                width: modalParams.position === 'center' ? 350 : '94%',
+                                transform: modalParams.position === 'center' ? [] : [{ translateY: translateY }],
+                            },
+                            styles.modalContainer,
+                        ]}
+                    >
+                        <Text style={styles.modalTitle}>{modalTexts?.title}</Text>
+                        {modalTexts?.message && <Text style={styles.modalMessage}>{modalTexts?.message}</Text>}
+                        {content && <View style={styles.contentModal}>{content}</View>}
+                        <View style={styles.buttonContainer}>
+                            {modalTexts?.textCancel && (
+                                <Pressable
+                                    onPress={onCancel}
+                                    style={({ pressed }) => [
+                                        {
+                                            width: '48%',
+                                            backgroundColor: pressed ? '#E0E0E0' : '#FFFFFF',
+                                            borderWidth: 1,
+                                            borderColor: '#EB5757',
+                                            padding: 15,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            borderRadius: 10,
+                                        },
+                                    ]}
+                                >
+                                    <Text style={styles.cancelButtonText}>{modalTexts?.textCancel}</Text>
+                                </Pressable>
+                            )}
                             <Pressable
-                                onPress={onCancel}
+                                disabled={disabledSave}
+                                onPress={onConfirm}
                                 style={({ pressed }) => [
                                     {
-                                        width: '48%',
-                                        backgroundColor: pressed ? '#E0E0E0' : '#FFFFFF',
+                                        width: modalTexts?.textCancel ? '48%' : '100%',
+                                        backgroundColor: pressed ? '#D32F2F' : '#EB5757',
                                         borderWidth: 1,
                                         borderColor: '#EB5757',
                                         padding: 15,
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         borderRadius: 10,
+                                        opacity: disabledSave ? 0.8 : 1,
                                     },
                                 ]}
                             >
-                                <Text style={styles.cancelButtonText}>{modalTexts?.textCancel}</Text>
+                                <Text style={styles.confirmButtonText}>{modalTexts?.textConfirm}</Text>
                             </Pressable>
-                        )}
-                        <Pressable
-                            onPress={onConfirm}
-                            style={({ pressed }) => [
-                                {
-                                    width: modalTexts?.textCancel ? '48%' : '100%',
-                                    backgroundColor: pressed ? '#D32F2F' : '#EB5757',
-                                    borderWidth: 1,
-                                    borderColor: '#EB5757',
-                                    padding: 15,
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    borderRadius: 10,
-                                },
-                            ]}
-                        >
-                            <Text style={styles.confirmButtonText}>{modalTexts?.textConfirm}</Text>
-                        </Pressable>
-                    </View>
-                </Animated.View>
+                        </View>
+                    </Animated.View>
+                </TouchableWithoutFeedback>
             </TouchableOpacity>
         </Modal>
     );

@@ -1,10 +1,10 @@
 export interface User {
     id?: string;
-    password: string;
-    username: string;
-    name: string;
-    email: string;
-    image: string;
+    password?: string;
+    username?: string;
+    name?: string;
+    email?: string;
+    image?: string;
     token?: string;
 }
 
@@ -34,4 +34,5 @@ export interface StateAuth {
 export type ActionAuth =
     | { type: 'SIGN_IN', payload: SignIn }
     // | { type: 'SIGN_UP', payload: SignUp }
-    | { type: 'SIGN_OUT' };
+    | { type: 'SIGN_OUT' }
+    | { type: 'UPDATE_USER', payload: User };

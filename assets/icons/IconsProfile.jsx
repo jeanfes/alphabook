@@ -1,4 +1,4 @@
-import { Svg, Path } from 'react-native-svg';
+import Svg, { G, Path, Defs, ClipPath } from "react-native-svg"
 
 export const IconCamera = ({ width = 24, height = 24, color = '#4F4F4F' }) => {
     return (
@@ -45,3 +45,30 @@ export const IconLock = ({ width = 24, height = 24, color = '#4F4F4F' }) => {
         </Svg>
     );
 };
+
+export const IconMultiUsers = ({ width = 25, height = 24, color = '#4F4F4F' }) => {
+    return (
+        <Svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={width}
+            height={height}
+            viewBox="0 0 25 24"
+            fill="none"
+        >
+            <G
+                clipPath="url(#clip0_262_244)"
+                stroke={color}
+                strokeWidth={1.5}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            >
+                <Path d="M17.5 21v-2a4 4 0 00-4-4h-8a4 4 0 00-4 4v2M9.5 11a4 4 0 100-8 4 4 0 000 8zM23.5 21v-2a4 4 0 00-3-3.87M16.5 3.13a4 4 0 010 7.75" />
+            </G>
+            <Defs>
+                <ClipPath id="clip0_262_244">
+                    <Path fill="#fff" transform="translate(.5)" d="M0 0H24V24H0z" />
+                </ClipPath>
+            </Defs>
+        </Svg>
+    )
+}
