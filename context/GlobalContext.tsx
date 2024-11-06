@@ -8,9 +8,8 @@ interface AuthContextProps {
     handleUpdateUser: (payload: User) => void;
     userMemory: User | null | undefined;
     tokenMemory: string | undefined;
-    user: User | null | undefined;
+    user: User | null;
     token: string;
-    // handleSignUp: (payload: User) => void;
 }
 
 export const GlobalContext = createContext<AuthContextProps | undefined>(undefined);

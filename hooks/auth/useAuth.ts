@@ -27,12 +27,8 @@ const reducerAuthentication = (state: StateAuth, action: ActionAuth): StateAuth 
                 user: null,
                 token: '',
             };
-        // case 'SIGN_UP':
-        //     return {
-        //         ...state,
-        //         user: action.payload,
-        //     };
         case 'UPDATE_USER':
+            saveSecureData({ key: 'user', value: action.payload });
             return {
                 ...state,
                 user: action.payload,
@@ -81,9 +77,6 @@ export const useAuthentication = () => {
         getToken();
     }, []);
 
-    // const handleSignUp = (payload: SignUp) => {
-    //     dispatch({ type: 'SIGN_UP', payload });
-    // };
 
     return {
         handleSignIn,
@@ -93,6 +86,5 @@ export const useAuthentication = () => {
         token,
         userMemory,
         tokenMemory,
-        // handleSignUp,
     };
 }

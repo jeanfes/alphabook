@@ -18,14 +18,6 @@ export interface SignIn {
     token: string;
 }
 
-// export interface SignUp {
-//     name: string;
-//     username: string;
-//     email: string;
-//     password: string;
-//     confirmPassword?: string;
-// }
-
 export interface StateAuth {
     user: User | null;
     token: string;

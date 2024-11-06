@@ -126,7 +126,7 @@ export default function StackHome() {
                     headerTitle: '',
                     headerShadowVisible: false,
                     headerTitleStyle: {
-                        color: '#000',
+                        color: '#000000',
                         fontFamily: 'OpenSansBold',
                         fontSize: 20,
                     },
@@ -159,7 +159,7 @@ export default function StackHome() {
                                 <IconSaved color={isFavorite ? '#EB5757' : '#fff'} />
                             </Pressable>
                         );
-                    },
+                    }
                 })}
             />
             <Stack.Screen

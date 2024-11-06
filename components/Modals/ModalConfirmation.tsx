@@ -4,7 +4,7 @@ import { Modal, View, Text, TouchableOpacity, StyleSheet, Animated, Easing, Pres
 
 export const ModalConfirmation = ({ modalParams, modalTexts, onConfirm, onCancel, disabledSave = false, content }: ModalProps) => {
     const translateY = useRef(new Animated.Value(0)).current;
-
+    
     useEffect(() => {
         if (modalParams.visible) {
             if (modalParams.position === 'top' || modalParams.position === 'bottom') {

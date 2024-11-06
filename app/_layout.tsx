@@ -1,4 +1,3 @@
-import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { GlobalProvider } from '@/context/GlobalContext';
 import Navigator from './navigator';
@@ -29,6 +28,7 @@ const linking = {
 };
 
 export default function App() {
+
     return (
         <GlobalProvider>
             <NavigationContainer independent linking={linking}>

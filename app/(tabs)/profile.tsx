@@ -13,8 +13,10 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { useNavigation } from '@react-navigation/native';
 import { customFetch } from '@/services/customFetch';
+import { User } from '@/interfaces/auth';
+import { useConnection } from '@/hooks/connection/useConnection';
 
-const getValidationSchema = (field: string) => {
+const getValidationSchema = (field: string, user: User | null, userMemory: User | undefined | null) => {
     switch (field) {
         case modalTypes.name:
             return Yup.object().shape({
@@ -30,7 +32,11 @@ const getValidationSchema = (field: string) => {
             });
         case modalTypes.oldPassword:
             return Yup.object().shape({
-                oldPassword: Yup.string().required('Old Password is required'),
+                oldPassword: Yup.string()
+                    .required('Old Password is required')
+                    .test('passwords-match', 'Old Password does not match', function (value) {
+                        return value === user?.password || value === userMemory?.password;
+                    }),
                 newPassword: Yup.string().required('New Password is required'),
                 confirmPassword: Yup.string()
                     .oneOf([Yup.ref('newPassword')], 'Passwords must match')
@@ -45,7 +51,7 @@ const modalTypes = {
     name: 'name',
     username: 'username',
     email: 'email',
-    profile: 'profile',
+    account: 'account',
     oldPassword: 'oldPassword',
     signOut: 'signOut',
 }
@@ -61,6 +67,7 @@ interface FormValues {
 
 export default function Profile() {
     const { token, tokenMemory, user, userMemory, handleSignOut, handleUpdateUser } = useGlobalContext();
+    const { isConnected } = useConnection();
     const [modalParams, setModalParams] = useState<ModalParams>({ visible: false, position: 'center' });
     const [modalTexts, setModalTexts] = useState<ModalTexts>({ title: '', message: '', textConfirm: '', textCancel: '' });
     const [modalType, setModalType] = useState('');
@@ -76,39 +83,60 @@ export default function Profile() {
             newPassword: '',
             confirmPassword: '',
         },
-        validationSchema: getValidationSchema(modalType),
+        validationSchema: getValidationSchema(modalType, user, userMemory),
         onSubmit: async (values) => {
-            const body = modalType === modalTypes.oldPassword ? { password: values.confirmPassword } : { [modalType]: values[modalType as keyof FormValues] };
-            try {
-                const res = await customFetch({
-                    method: 'GET',
-                    endpoint: `users?username=${values.username}`,
-                    token: token || tokenMemory,
-                    body: body
-                });
-                if (res.success) {
-                    if (user?.username || userMemory?.username) {
-                        if (modalType === modalTypes.oldPassword) {
-                            handleUpdateUser({
-                                ...user,
-                                password: values.newPassword,
-                            });
-                        } else {
-                            handleUpdateUser({
-                                ...user,
-                                [modalType]: values[modalType as keyof FormValues],
-                            });
-                        }
-                    }
+            if (!isConnected) {
+                alert('No internet connection');
+                return;
+            }
+            // const body = modalType === modalTypes.oldPassword ? { password: values.confirmPassword } : { [modalType]: values[modalType as keyof FormValues] };
+            // try { 
+            //     const res = await customFetch({
+            //         method: 'GET',
+            //         endpoint: `users?username=${values.username}`,
+            //         token: token || tokenMemory,
+            //         body: body
+            //     });
+            //     if (res.success) {
+            //         if (user || userMemory) {
+            //             if (modalType === modalTypes.oldPassword) {
+            //                 handleUpdateUser({
+            //                     ...user,
+            //                     password: values.newPassword,
+            //                     id: user?.id || '',
+            //                 });
+            //             } else {
+            //                 handleUpdateUser({
+            //                     ...user,
+            //                     [modalType]: values[modalType as keyof FormValues],
+            //                 });
+            //             }
+            //         }
+            //     } else {
+            //         console.log(res.error);
+            //     }
+            // } catch (error) {
+            //     console.log(error);
+            // }
+            if (user || userMemory) {
+                if (modalType === modalTypes.oldPassword) {
+                    handleUpdateUser({
+                        ...user,
+                        password: values.newPassword,
+                        id: user?.id || '',
+                    });
+                } else {
+                    handleUpdateUser({
+                        ...user,
+                        [modalType]: values[modalType as keyof FormValues],
+                    });
                 }
-            } catch (error) {
-                console.log(error);
             }
             handleCloseModal();
             resetForm();
         },
         validateOnChange: true,
-        validateOnMount: true,
+        validateOnMount: false,
     });
 
     const handleCloseModal = () => {
@@ -121,7 +149,7 @@ export default function Profile() {
 
     const handleSignOutAndNavigate = async () => {
         await handleSignOut();
-        navigation.navigate('Landing');
+        navigation.navigate('Index');
     };
 
     const handleConfirmModal = async () => {
@@ -136,7 +164,7 @@ export default function Profile() {
 
     };
 
-    const handleModal = async (type: string) => {
+    const handleOpenModal = async (type: string) => {
         switch (type) {
             case modalTypes.name:
                 setModalType(modalTypes.name);
@@ -156,9 +184,9 @@ export default function Profile() {
                 setModalParams({ visible: true, position: 'bottom' });
                 await setFieldValue('email', user?.email || userMemory?.email || '');
                 break;
-            case modalTypes.profile:
-                setModalType(modalTypes.profile);
-                setModalTexts({ title: 'Change profile', textConfirm: 'Save' });
+            case modalTypes.account:
+                setModalType(modalTypes.account);
+                setModalTexts({ title: 'Change account', textConfirm: 'Save' });
                 setModalParams({ visible: true, position: 'center' });
                 break;
             case modalTypes.oldPassword:
@@ -221,16 +249,16 @@ export default function Profile() {
                 </View>
                 <View style={styles.containerInputsProfile}>
                     <ButtonProfile
-                        onPress={() => handleModal('name')}
+                        onPress={() => handleOpenModal('name')}
                         icon={<IconPencil />}
                         text="Name"
                         value={shortText(user?.name, 15) || shortText(userMemory?.name, 15) || 'user'}
                     />
-                    <ButtonProfile onPress={() => handleModal('username')} icon={<IconPencil />} text="Username" value={user?.username || userMemory?.username || 'username'} />
-                    <ButtonProfile onPress={() => handleModal('email')} icon={<IconPencil />} text="Email" value={user?.email || userMemory?.email || 'email'} />
-                    <ButtonProfile onPress={() => handleModal('profile')} icon={<IconMultiUsers />} text="Change profile" />
-                    <ButtonProfile onPress={() => handleModal('oldPassword')} icon={<IconLock />} text="Change password" />
-                    <ButtonProfile onPress={() => handleModal('signOut')} icon={<IconSignOut />} text="Sign out" />
+                    <ButtonProfile onPress={() => handleOpenModal(modalTypes.name)} icon={<IconPencil />} text="Username" value={user?.username || userMemory?.username || 'username'} />
+                    <ButtonProfile onPress={() => handleOpenModal(modalTypes.email)} icon={<IconPencil />} text="Email" value={user?.email || userMemory?.email || 'email'} />
+                    <ButtonProfile onPress={() => handleOpenModal(modalTypes.account)} icon={<IconMultiUsers />} text="Change account" />
+                    <ButtonProfile onPress={() => handleOpenModal(modalTypes.oldPassword)} icon={<IconLock />} text="Change password" />
+                    <ButtonProfile onPress={() => handleOpenModal(modalTypes.signOut)} icon={<IconSignOut />} text="Sign out" />
                 </View>
             </View>
             <ModalConfirmation
@@ -248,7 +276,7 @@ export default function Profile() {
                 onConfirm={handleConfirmModal}
                 content={
                     <>
-                        {modalType !== modalTypes.signOut && modalType != modalTypes.profile ?
+                        {modalType !== modalTypes.signOut && modalType != modalTypes.account ?
                             <View style={{ width: '100%', height: modalType === modalTypes.oldPassword ? 240 : 80 }}>
                                 <InputDynamic
                                     check={errors[modalType as keyof FormValues] ? false : true}
@@ -282,7 +310,7 @@ export default function Profile() {
                                     </>
                                 }
                             </View>
-                            : modalType === modalTypes.profile ?
+                            : modalType === modalTypes.account ?
                                 <View>
                                     <Text>Change profile</Text>
                                 </View>
