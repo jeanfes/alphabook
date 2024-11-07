@@ -8,8 +8,8 @@ const Stack = createNativeStackNavigator();
 
 export default function Landing() {
     return (
-        <Stack.Navigator initialRouteName="Index">
-            <Stack.Screen name="Index" component={Index} options={{ headerShown: false }} />
+        <Stack.Navigator initialRouteName="IndexLanding">
+            <Stack.Screen name="IndexLanding" component={Index} options={{ headerShown: false }} />
             <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
             <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
         </Stack.Navigator>

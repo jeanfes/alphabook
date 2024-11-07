@@ -1,10 +1,10 @@
-import { ModalProps } from '@/interfaces/modals';
-import React, { useEffect, useRef } from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet, Animated, Easing, Pressable, StatusBar, TouchableWithoutFeedback } from 'react-native';
+import { ModalConfirmationProps } from '@/interfaces/modals';
+import React, { useEffect, useRef } from 'react';
 
-export const ModalConfirmation = ({ modalParams, modalTexts, onConfirm, onCancel, disabledSave = false, content }: ModalProps) => {
+export const ModalConfirmation = ({ modalParams, modalTexts, onConfirm, onCancel, disabledSave = false, content }: ModalConfirmationProps) => {
     const translateY = useRef(new Animated.Value(0)).current;
-    
+
     useEffect(() => {
         if (modalParams.visible) {
             if (modalParams.position === 'top' || modalParams.position === 'bottom') {
@@ -40,7 +40,7 @@ export const ModalConfirmation = ({ modalParams, modalTexts, onConfirm, onCancel
                     <Animated.View
                         style={[
                             {
-                                width: modalParams.position === 'center' ? 350 : '94%',
+                                width: modalParams.position === 'center' ? 350 : '96%',
                                 transform: modalParams.position === 'center' ? [] : [{ translateY: translateY }],
                             },
                             styles.modalContainer,

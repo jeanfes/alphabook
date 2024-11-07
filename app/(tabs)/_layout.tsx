@@ -3,11 +3,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text, Animated, StyleSheet, StatusBar } from 'react-native';
 import { IconAlpha, IconHome, IconProfile, IconSaved, IconStore } from '../../assets/icons/IconsTabLayout';
 import { useFonts } from 'expo-font';
-import Profile from './profile';
-import StackFavorites from './favorites';
-import StackHome from './home';
-import Alpha from './alpha';
-import StackStore from './store';
+import StackProfile from './stackprofile';
+import StackFavorites from './stackfavorites';
+import StackHome from './stackhome';
+import StackAlpha from './stackalpha';
+import StackStore from './stackstore';
 
 const Tab = createBottomTabNavigator();
 
@@ -54,7 +54,7 @@ export default function Main() {
         <>
             <StatusBar backgroundColor={'#FFFFFF'} barStyle="light-content" />
             <Tab.Navigator
-                initialRouteName="Home"
+                initialRouteName="StackHome"
                 screenOptions={{
                     headerShown: false,
                     tabBarStyle: {
@@ -83,8 +83,8 @@ export default function Main() {
                     }}
                 />
                 <Tab.Screen
-                    name="Alpha"
-                    component={Alpha}
+                    name="StackAlpha"
+                    component={StackAlpha}
                     options={{
                         title: 'Alpha',
                         tabBarLabel: ({ focused }) => <AnimatedLabel focused={focused} title="Alpha" />,
@@ -101,8 +101,8 @@ export default function Main() {
                     }}
                 /> */}
                 <Tab.Screen
-                    name="Profile"
-                    component={Profile}
+                    name="StackProfile"
+                    component={StackProfile}
                     options={{
                         title: 'Profile',
                         tabBarLabel: ({ focused }) => <AnimatedLabel focused={focused} title="Profile" />,

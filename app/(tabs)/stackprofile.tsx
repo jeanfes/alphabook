@@ -2,19 +2,20 @@ import { IconProfile } from '@/assets/icons/IconsMenu';
 import { ViewContainer } from '@/components/ViewContainer/ViewContainer';
 import { useGlobalContext } from '@/context/GlobalContext';
 import { IconCamera, IconLock, IconMultiUsers, IconPencil, IconSignOut } from '@/assets/icons/IconsProfile';
-import { Image, Pressable, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';
-import { shortText } from '@/utilities/formatters';
+import { ActivityIndicator, Image, Pressable, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';
+import { pascalCase, shortText } from '@/utilities/formatters';
 import { ButtonProfile } from '@/components/Buttons/ButtonProfile';
 import { useId, useState } from 'react';
 import { ModalConfirmation } from '@/components/Modals/ModalConfirmation';
-import { ModalParams, ModalTexts } from '@/interfaces/modals';
+import { ModalParams, ModalParamsConfirm, ModalTexts } from '@/interfaces/modals';
 import { InputDynamic } from '@/components/Inputs/InputDynamic';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import { useNavigation } from '@react-navigation/native';
 import { customFetch } from '@/services/customFetch';
 import { User } from '@/interfaces/auth';
 import { useConnection } from '@/hooks/connection/useConnection';
+import { ModalSuccess } from '@/components/Modals/ModalSuccess';
+import { ModalError } from '@/components/Modals/ModalError';
 
 const getValidationSchema = (field: string, user: User | null, userMemory: User | undefined | null) => {
     switch (field) {
@@ -30,9 +31,9 @@ const getValidationSchema = (field: string, user: User | null, userMemory: User 
             return Yup.object().shape({
                 email: Yup.string().email('Invalid email').required('Email is required'),
             });
-        case modalTypes.oldPassword:
+        case modalTypes.password:
             return Yup.object().shape({
-                oldPassword: Yup.string()
+                password: Yup.string()
                     .required('Old Password is required')
                     .test('passwords-match', 'Old Password does not match', function (value) {
                         return value === user?.password || value === userMemory?.password;
@@ -52,7 +53,7 @@ const modalTypes = {
     username: 'username',
     email: 'email',
     account: 'account',
-    oldPassword: 'oldPassword',
+    password: 'password',
     signOut: 'signOut',
 }
 
@@ -60,18 +61,20 @@ interface FormValues {
     name: string;
     username: string;
     email: string;
-    oldPassword: string
+    password: string
     newPassword: string;
     confirmPassword: string;
 }
 
-export default function Profile() {
+export default function StackProfile() {
     const { token, tokenMemory, user, userMemory, handleSignOut, handleUpdateUser } = useGlobalContext();
     const { isConnected } = useConnection();
-    const [modalParams, setModalParams] = useState<ModalParams>({ visible: false, position: 'center' });
+    const [modalParamsConfirmation, setModalParamsConfirmation] = useState<ModalParamsConfirm>({ visible: false, position: 'center' });
+    const [modalParamsSuccess, setModalParamsSuccess] = useState<ModalParams>({ visible: false, position: 'center', text: '' });
+    const [modalParamsError, setModalParamsError] = useState<ModalParams>({ visible: false, position: 'center', text: '' });
     const [modalTexts, setModalTexts] = useState<ModalTexts>({ title: '', message: '', textConfirm: '', textCancel: '' });
     const [modalType, setModalType] = useState('');
-    const navigation = useNavigation<any>();
+    const [loading, setLoading] = useState(false);
     const idModal = useId();
 
     const { resetForm, values, errors, setFieldValue, handleChange, handleBlur, handleSubmit, validateField } = useFormik({
@@ -79,18 +82,20 @@ export default function Profile() {
             name: '',
             username: '',
             email: '',
-            oldPassword: '',
+            password: '',
             newPassword: '',
             confirmPassword: '',
         },
         validationSchema: getValidationSchema(modalType, user, userMemory),
         onSubmit: async (values) => {
             if (!isConnected) {
-                alert('No internet connection');
+                setModalParamsError({ visible: true, position: 'center', text: 'No internet connection' });
                 return;
             }
-            // const body = modalType === modalTypes.oldPassword ? { password: values.confirmPassword } : { [modalType]: values[modalType as keyof FormValues] };
-            // try { 
+            setLoading(true);
+            //////
+            // const body = modalType === modalTypes.password ? { password: values.confirmPassword } : { [modalType]: values[modalType as keyof FormValues] };
+            // try {
             //     const res = await customFetch({
             //         method: 'GET',
             //         endpoint: `users?username=${values.username}`,
@@ -99,7 +104,7 @@ export default function Profile() {
             //     });
             //     if (res.success) {
             //         if (user || userMemory) {
-            //             if (modalType === modalTypes.oldPassword) {
+            //             if (modalType === modalTypes.password) {
             //                 handleUpdateUser({
             //                     ...user,
             //                     password: values.newPassword,
@@ -117,44 +122,44 @@ export default function Profile() {
             //     }
             // } catch (error) {
             //     console.log(error);
+            // } finally {
+            //     setLoading(false);
             // }
-            if (user || userMemory) {
-                if (modalType === modalTypes.oldPassword) {
-                    handleUpdateUser({
-                        ...user,
-                        password: values.newPassword,
-                        id: user?.id || '',
-                    });
-                } else {
-                    handleUpdateUser({
-                        ...user,
-                        [modalType]: values[modalType as keyof FormValues],
-                    });
+            /////
+            setTimeout(async () => {
+                if (user || userMemory) {
+                    if (modalType === modalTypes.password) {
+                        handleUpdateUser({
+                            ...(user || userMemory),
+                            password: values.newPassword,
+                            id: user?.id || userMemory?.id || '',
+                        });
+                    } else {
+                        handleUpdateUser({
+                            ...(user || userMemory),
+                            [modalType]: values[modalType as keyof typeof values],
+                        });
+                    }
                 }
-            }
-            handleCloseModal();
-            resetForm();
+                setModalParamsSuccess({ visible: true, position: 'center', text: `${pascalCase(modalType)} updated.` });
+                setLoading(false);
+                handleCloseModal();
+            }, 2000);
         },
         validateOnChange: true,
         validateOnMount: false,
     });
 
-    const handleCloseModal = () => {
+    const handleCloseModal = async () => {
         resetForm();
-        setModalParams({
-            ...modalParams,
+        setModalParamsConfirmation({
+            ...modalParamsConfirmation,
             visible: false,
         });
     };
-
-    const handleSignOutAndNavigate = async () => {
-        await handleSignOut();
-        navigation.navigate('Index');
-    };
-
     const handleConfirmModal = async () => {
         if (modalType === modalTypes.signOut) {
-            handleSignOutAndNavigate();
+            handleSignOut();
         } else {
             const error = await validateField(modalType);
             if (!error) {
@@ -169,38 +174,38 @@ export default function Profile() {
             case modalTypes.name:
                 setModalType(modalTypes.name);
                 setModalTexts({ title: 'Name', textConfirm: 'Save' });
-                setModalParams({ visible: true, position: 'bottom' });
+                setModalParamsConfirmation({ visible: true, position: 'bottom' });
                 await setFieldValue('name', user?.name || userMemory?.name || '');
                 break;
             case modalTypes.username:
                 setModalType(modalTypes.username);
                 setModalTexts({ title: 'Username', textConfirm: 'Save' });
-                setModalParams({ visible: true, position: 'bottom' });
+                setModalParamsConfirmation({ visible: true, position: 'bottom' });
                 await setFieldValue('username', user?.username || userMemory?.username || '');
                 break;
             case modalTypes.email:
                 setModalType(modalTypes.email);
                 setModalTexts({ title: 'Email', textConfirm: 'Save' });
-                setModalParams({ visible: true, position: 'bottom' });
+                setModalParamsConfirmation({ visible: true, position: 'bottom' });
                 await setFieldValue('email', user?.email || userMemory?.email || '');
                 break;
             case modalTypes.account:
                 setModalType(modalTypes.account);
                 setModalTexts({ title: 'Change account', textConfirm: 'Save' });
-                setModalParams({ visible: true, position: 'center' });
+                setModalParamsConfirmation({ visible: true, position: 'center' });
                 break;
-            case modalTypes.oldPassword:
-                setModalType(modalTypes.oldPassword);
+            case modalTypes.password:
+                setModalType(modalTypes.password);
                 setModalTexts({ title: 'Change password', textConfirm: 'Save' });
-                setModalParams({ visible: true, position: 'bottom' });
-                setFieldValue('oldPassword', '');
+                setModalParamsConfirmation({ visible: true, position: 'bottom' });
+                setFieldValue('password', '');
                 setFieldValue('newPassword', '');
                 setFieldValue('confirmPassword', '');
                 break;
             case modalTypes.signOut:
                 setModalType(modalTypes.signOut);
                 setModalTexts({ title: 'Sign out', message: 'Are you sure you want to sign out?', textConfirm: 'Sign Out', textCancel: 'Cancel' });
-                setModalParams({ visible: true, position: 'center' });
+                setModalParamsConfirmation({ visible: true, position: 'center' });
                 break;
             default:
                 break;
@@ -249,53 +254,55 @@ export default function Profile() {
                 </View>
                 <View style={styles.containerInputsProfile}>
                     <ButtonProfile
-                        onPress={() => handleOpenModal('name')}
+                        onPress={() => handleOpenModal(modalTypes.name)}
                         icon={<IconPencil />}
                         text="Name"
                         value={shortText(user?.name, 15) || shortText(userMemory?.name, 15) || 'user'}
                     />
-                    <ButtonProfile onPress={() => handleOpenModal(modalTypes.name)} icon={<IconPencil />} text="Username" value={user?.username || userMemory?.username || 'username'} />
+                    <ButtonProfile onPress={() => handleOpenModal(modalTypes.username)} icon={<IconPencil />} text="Username" value={user?.username || userMemory?.username || 'username'} />
                     <ButtonProfile onPress={() => handleOpenModal(modalTypes.email)} icon={<IconPencil />} text="Email" value={user?.email || userMemory?.email || 'email'} />
                     <ButtonProfile onPress={() => handleOpenModal(modalTypes.account)} icon={<IconMultiUsers />} text="Change account" />
-                    <ButtonProfile onPress={() => handleOpenModal(modalTypes.oldPassword)} icon={<IconLock />} text="Change password" />
+                    <ButtonProfile onPress={() => handleOpenModal(modalTypes.password)} icon={<IconLock />} text="Change password" />
                     <ButtonProfile onPress={() => handleOpenModal(modalTypes.signOut)} icon={<IconSignOut />} text="Sign out" />
                 </View>
             </View>
             <ModalConfirmation
                 disabledSave={
-                    modalType === modalTypes.oldPassword
-                        ? !values.oldPassword || !values.newPassword || !values.confirmPassword || !!errors.oldPassword || !!errors.newPassword || !!errors.confirmPassword
+                    loading ||
+                    (modalType === modalTypes.password
+                        ? !values.password || !values.newPassword || !values.confirmPassword || !!errors.password || !!errors.newPassword || !!errors.confirmPassword
                         : modalType === modalTypes.signOut
                             ? false
-                            : !values[modalType as keyof FormValues] || !!errors[modalType as keyof FormValues]
+                            : !values[modalType as keyof FormValues] || !!errors[modalType as keyof FormValues])
                 }
                 key={idModal}
-                modalParams={modalParams}
+                modalParams={modalParamsConfirmation}
                 modalTexts={modalTexts}
                 onCancel={handleCloseModal}
                 onConfirm={handleConfirmModal}
                 content={
                     <>
                         {modalType !== modalTypes.signOut && modalType != modalTypes.account ?
-                            <View style={{ width: '100%', height: modalType === modalTypes.oldPassword ? 240 : 80 }}>
+                            <View style={{ width: '100%', height: modalType === modalTypes.password ? 240 : 80 }}>
                                 <InputDynamic
                                     check={errors[modalType as keyof FormValues] ? false : true}
                                     value={values[modalType as keyof FormValues]}
                                     onChange={handleChange(modalType)}
                                     onBlur={handleBlur(modalType)}
-                                    placeholder={modalType === modalTypes.oldPassword ? "Old password" : modalType}
-                                    secureTextEntry={modalType === modalTypes.oldPassword}
+                                    placeholder={modalType === modalTypes.password ? "Old password" : modalType}
+                                    secureTextEntry={modalType === modalTypes.password}
                                     autoFocus={true}
+                                    loading={loading}
                                 />
-                                {modalType === modalTypes.oldPassword &&
+                                {modalType === modalTypes.password &&
                                     <>
                                         <InputDynamic
                                             check={errors.newPassword ? false : true}
                                             value={values.newPassword}
                                             onChange={handleChange('newPassword')}
                                             onBlur={handleBlur('newPassword')}
-                                            placeholder={modalType === modalTypes.oldPassword ? "New password" : modalType}
-                                            secureTextEntry={modalType === modalTypes.oldPassword}
+                                            placeholder={modalType === modalTypes.password ? "New password" : modalType}
+                                            secureTextEntry={modalType === modalTypes.password}
                                             autoFocus={true}
                                         />
                                         <InputDynamic
@@ -319,6 +326,8 @@ export default function Profile() {
                     </>
                 }
             />
+            <ModalSuccess modalParams={modalParamsSuccess} setModalParams={setModalParamsSuccess} />
+            <ModalError modalParams={modalParamsError} setModalParams={setModalParamsError} />
         </ViewContainer >
     );
 }

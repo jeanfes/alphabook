@@ -10,6 +10,7 @@ interface AuthContextProps {
     tokenMemory: string | undefined;
     user: User | null;
     token: string;
+    loading: boolean;
 }
 
 export const GlobalContext = createContext<AuthContextProps | undefined>(undefined);
@@ -19,10 +20,10 @@ interface GlobalProviderProps {
 }
 
 export const GlobalProvider: FC<GlobalProviderProps> = ({ children }) => {
-    const { handleSignIn, handleSignOut, handleUpdateUser, user, token, userMemory, tokenMemory } = useAuthentication();
+    const { handleSignIn, handleSignOut, handleUpdateUser, user, token, userMemory, tokenMemory, loading } = useAuthentication();
 
     return (
-        <GlobalContext.Provider value={{ handleSignIn, handleSignOut, handleUpdateUser, user, token, userMemory, tokenMemory }}>
+        <GlobalContext.Provider value={{ handleSignIn, handleSignOut, handleUpdateUser, user, token, userMemory, tokenMemory, loading }}>
             {children}
         </GlobalContext.Provider>
     );

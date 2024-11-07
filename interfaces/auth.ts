@@ -21,10 +21,12 @@ export interface SignIn {
 export interface StateAuth {
     user: User | null;
     token: string;
+    loading: boolean;
 }
 
 export type ActionAuth =
     | { type: 'SIGN_IN', payload: SignIn }
     // | { type: 'SIGN_UP', payload: SignUp }
     | { type: 'SIGN_OUT' }
-    | { type: 'UPDATE_USER', payload: User };
+    | { type: 'UPDATE_USER', payload: User }
+    | { type: 'SET_LOADING', payload: boolean };

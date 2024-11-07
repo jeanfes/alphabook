@@ -3,6 +3,7 @@ import { IconEye } from '@/assets/icons/IconsForms';
 import { IconCheck } from '@/assets/icons/IconsForms';
 import { IconNoCheck } from '@/assets/icons/IconsForms';
 import { useEffect, useRef, useState } from 'react';
+import { ActityIndicator } from '../Loaders/Loaders';
 
 interface InputDynamicProps {
     placeholder: string;
@@ -12,10 +13,11 @@ interface InputDynamicProps {
     secureTextEntry?: boolean;
     check?: boolean | null;
     autoFocus?: boolean;
+    loading?: boolean;
     id?: string;
 }
 
-export const InputDynamic = ({ placeholder, value, onChange, onBlur, secureTextEntry = false, check = false, id, autoFocus }: InputDynamicProps) => {
+export const InputDynamic = ({ placeholder, value, onChange, onBlur, secureTextEntry = false, check = false, id, autoFocus, loading = false }: InputDynamicProps) => {
     const [isTextVisible, setIsTextVisible] = useState(!secureTextEntry);
     const inputRef = useRef<TextInput>(null);
     const toggleTextVisibility = () => {
@@ -43,6 +45,7 @@ export const InputDynamic = ({ placeholder, value, onChange, onBlur, secureTextE
         >
             <TextInput
                 ref={inputRef}
+                editable={!loading}
                 style={styles.input}
                 placeholder={placeholder}
                 value={value}
@@ -51,16 +54,22 @@ export const InputDynamic = ({ placeholder, value, onChange, onBlur, secureTextE
                 secureTextEntry={secureTextEntry && !isTextVisible}
                 id={id}
             />
-            {!secureTextEntry && (
-                <Pressable style={styles.icon} onPress={toggleTextVisibility}>
-                    {check === true ? <IconCheck /> : check === false ? <IconNoCheck /> : null}
-                </Pressable>
-            )}
-            {secureTextEntry && (
-                <Pressable style={styles.icon} onPress={toggleTextVisibility}>
-                    {isTextVisible ? <IconEye color="#EB5757" /> : <IconEye />}
-                </Pressable>
-            )}
+            {loading ?
+                <ActityIndicator />
+                :
+                <>
+                    {!secureTextEntry && (
+                        <Pressable style={styles.icon} onPress={toggleTextVisibility}>
+                            {check === true ? <IconCheck /> : check === false ? <IconNoCheck /> : null}
+                        </Pressable>
+                    )}
+                    {secureTextEntry && (
+                        <Pressable style={styles.icon} onPress={toggleTextVisibility}>
+                            {isTextVisible ? <IconEye color="#EB5757" /> : <IconEye />}
+                        </Pressable>
+                    )}
+                </>
+            }
         </View>
     );
 };

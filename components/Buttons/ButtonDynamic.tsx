@@ -1,15 +1,17 @@
 import { useFonts } from 'expo-font';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActityIndicator } from '../Loaders/Loaders';
 
 interface ButtonDynamicProps {
     title: string;
     onPress: () => void;
     design?: number;
     disabled?: boolean;
+    loading?: boolean;
     styles?: any;
 }
 
-export const ButtonDynamic = ({ title, onPress, design = 1, disabled = false, styles }: ButtonDynamicProps) => {
+export const ButtonDynamic = ({ title, onPress, design = 1, loading, disabled = false, styles }: ButtonDynamicProps) => {
     const [loaded] = useFonts({
         OpenSansRegular: require('../../assets/fonts/OpenSans-Regular.ttf'),
         OpenSansBold: require('../../assets/fonts/OpenSans-Bold.ttf'),
@@ -42,12 +44,26 @@ export const ButtonDynamic = ({ title, onPress, design = 1, disabled = false, st
                 getButtonStyle(pressed),
                 disabled && { opacity: 0.8 },
             ]}
-            disabled={disabled}
+            disabled={disabled || loading}
         >
-            <Text style={design === 1 ? styles1.text : design === 2 ? styles2.text : design === 3 ? styles3.text : styles4.text}>{title}</Text>
+            {loading ?
+                <View style={allStyles.loadingContainer}>
+                    <ActityIndicator size="small" color='#FFFFFF' />
+                </View> :
+                <Text style={design === 1 ? styles1.text : design === 2 ? styles2.text : design === 3 ? styles3.text : styles4.text}>{title}</Text>
+            }
         </Pressable>
     );
 };
+
+const allStyles = StyleSheet.create({
+    loadingContainer: {
+        flex: 1,
+        height: 28,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+});
 
 const styles1 = StyleSheet.create({
     button: {
@@ -69,6 +85,7 @@ const styles1 = StyleSheet.create({
         borderRadius: 10,
     },
     text: {
+        height: 28,
         color: '#EB5757',
         fontFamily: 'OpenSansRegular',
         fontSize: 18,
@@ -95,6 +112,7 @@ const styles2 = StyleSheet.create({
         borderRadius: 10,
     },
     text: {
+        height: 28,
         color: '#FFFFFF',
         fontFamily: 'OpenSansRegular',
         fontSize: 18,
@@ -121,6 +139,7 @@ const styles3 = StyleSheet.create({
         borderRadius: 10,
     },
     text: {
+        height: 28,
         color: '#FFFFFF',
         fontFamily: 'OpenSansRegular',
         fontSize: 18,
@@ -147,6 +166,7 @@ const styles4 = StyleSheet.create({
         borderRadius: 10,
     },
     text: {
+        height: 28,
         color: '#EB5757',
         fontFamily: 'OpenSansRegular',
         fontSize: 18,
