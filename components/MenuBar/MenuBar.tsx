@@ -110,7 +110,7 @@ export const MenuBar = ({ menuVisible = false, setMenuVisible }: MenuBarProps) =
                                     style={styles.profileButton}
                                     onPress={() => {
                                         toggleMenu();
-                                        navigation.navigate('Profile');
+                                        navigation.navigate('StackProfile');
                                     }}
                                 >
                                     <Text style={{ color: '#FFFFFF', fontFamily: 'OpenSansRegular', fontSize: 15, marginBottom: 2 }}>Mi perfil</Text>
