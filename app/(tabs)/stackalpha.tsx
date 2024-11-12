@@ -3,7 +3,6 @@ import * as DocumentPicker from 'expo-document-picker';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function StackAlpha() {
-
     const handleFileUpload = async () => {
         try {
             const res = await DocumentPicker.getDocumentAsync({
@@ -25,7 +24,7 @@ export default function StackAlpha() {
     return (
         <ViewContainer style={stylesAlpha.mainContainer}>
             <View style={stylesAlpha.titlePage}>
-                <Text style={stylesAlpha.titlePageText}>Upload AlphaBook</Text>
+                <Text style={stylesAlpha.titlePageText}>Upload Book</Text>
             </View>
         </ViewContainer>
     );

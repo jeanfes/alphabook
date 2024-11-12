@@ -55,13 +55,13 @@ const modalTypes = {
     account: 'account',
     password: 'password',
     signOut: 'signOut',
-}
+};
 
 interface FormValues {
     name: string;
     username: string;
     email: string;
-    password: string
+    password: string;
     newPassword: string;
     confirmPassword: string;
 }
@@ -166,7 +166,6 @@ export default function StackProfile() {
                 handleSubmit();
             }
         }
-
     };
 
     const handleOpenModal = async (type: string) => {
@@ -215,7 +214,7 @@ export default function StackProfile() {
     return (
         <ViewContainer>
             <StatusBar backgroundColor="#FFFFFF" barStyle="light-content" />
-            <View>
+            <View style={styles.mainContainer}>
                 <View style={styles.containerProfile}>
                     <View style={styles.containerImageProfile}>
                         {user?.image || userMemory?.image ? (
@@ -259,7 +258,12 @@ export default function StackProfile() {
                         text="Name"
                         value={shortText(user?.name, 15) || shortText(userMemory?.name, 15) || 'user'}
                     />
-                    <ButtonProfile onPress={() => handleOpenModal(modalTypes.username)} icon={<IconPencil />} text="Username" value={user?.username || userMemory?.username || 'username'} />
+                    <ButtonProfile
+                        onPress={() => handleOpenModal(modalTypes.username)}
+                        icon={<IconPencil />}
+                        text="Username"
+                        value={user?.username || userMemory?.username || 'username'}
+                    />
                     <ButtonProfile onPress={() => handleOpenModal(modalTypes.email)} icon={<IconPencil />} text="Email" value={user?.email || userMemory?.email || 'email'} />
                     <ButtonProfile onPress={() => handleOpenModal(modalTypes.account)} icon={<IconMultiUsers />} text="Change account" />
                     <ButtonProfile onPress={() => handleOpenModal(modalTypes.password)} icon={<IconLock />} text="Change password" />
@@ -272,8 +276,8 @@ export default function StackProfile() {
                     (modalType === modalTypes.password
                         ? !values.password || !values.newPassword || !values.confirmPassword || !!errors.password || !!errors.newPassword || !!errors.confirmPassword
                         : modalType === modalTypes.signOut
-                            ? false
-                            : !values[modalType as keyof FormValues] || !!errors[modalType as keyof FormValues])
+                          ? false
+                          : !values[modalType as keyof FormValues] || !!errors[modalType as keyof FormValues])
                 }
                 key={idModal}
                 modalParams={modalParamsConfirmation}
@@ -282,26 +286,26 @@ export default function StackProfile() {
                 onConfirm={handleConfirmModal}
                 content={
                     <>
-                        {modalType !== modalTypes.signOut && modalType != modalTypes.account ?
+                        {modalType !== modalTypes.signOut && modalType != modalTypes.account ? (
                             <View style={{ width: '100%', height: modalType === modalTypes.password ? 240 : 80 }}>
                                 <InputDynamic
                                     check={errors[modalType as keyof FormValues] ? false : true}
                                     value={values[modalType as keyof FormValues]}
                                     onChange={handleChange(modalType)}
                                     onBlur={handleBlur(modalType)}
-                                    placeholder={modalType === modalTypes.password ? "Old password" : modalType}
+                                    placeholder={modalType === modalTypes.password ? 'Old password' : modalType}
                                     secureTextEntry={modalType === modalTypes.password}
                                     autoFocus={true}
                                     loading={loading}
                                 />
-                                {modalType === modalTypes.password &&
+                                {modalType === modalTypes.password && (
                                     <>
                                         <InputDynamic
                                             check={errors.newPassword ? false : true}
                                             value={values.newPassword}
                                             onChange={handleChange('newPassword')}
                                             onBlur={handleBlur('newPassword')}
-                                            placeholder={modalType === modalTypes.password ? "New password" : modalType}
+                                            placeholder={modalType === modalTypes.password ? 'New password' : modalType}
                                             secureTextEntry={modalType === modalTypes.password}
                                             autoFocus={true}
                                         />
@@ -310,29 +314,34 @@ export default function StackProfile() {
                                             value={values.confirmPassword}
                                             onChange={handleChange('confirmPassword')}
                                             onBlur={handleBlur('confirmPassword')}
-                                            placeholder={"Confirm password"}
+                                            placeholder={'Confirm password'}
                                             autoFocus={true}
                                             secureTextEntry
                                         />
                                     </>
-                                }
+                                )}
                             </View>
-                            : modalType === modalTypes.account ?
-                                <View>
-                                    <Text>Change profile</Text>
-                                </View>
-                                : null
-                        }
+                        ) : modalType === modalTypes.account ? (
+                            <View>
+                                <Text>Change profile</Text>
+                            </View>
+                        ) : null}
                     </>
                 }
             />
             <ModalSuccess modalParams={modalParamsSuccess} setModalParams={setModalParamsSuccess} />
             <ModalError modalParams={modalParamsError} setModalParams={setModalParamsError} />
-        </ViewContainer >
+        </ViewContainer>
     );
 }
 
 const styles = StyleSheet.create({
+    mainContainer: {
+        flex: 1,
+        alignContent: 'center',
+        backgroundColor: '#FFFFFF',
+        paddingBottom: 40,
+    },
     containerProfile: {
         width: '100%',
         height: 'auto',
